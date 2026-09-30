@@ -649,18 +649,18 @@
     ],
     "remarks": "",
     "photos": [
-      "https://web.telegram.org/8b9fdef0-d8f2-4d3b-952f-e597321148dc",
-      "https://web.telegram.org/722c4533-9745-46e0-b921-41d39316d433",
-      "https://web.telegram.org/b4428599-b24f-46ac-9859-530936848233",
-      "https://web.telegram.org/b233f62e-3d18-459d-9f7d-0d665bd72b24",
-      "https://web.telegram.org/5e4b066e-cf0f-46ec-bff6-5f7c0632af0f",
-      "https://web.telegram.org/f2277d4f-e526-4811-a676-35bfc0b0547a",
-      "https://web.telegram.org/9f0a856b-7799-4c41-a33b-831161b81efb"
+      "blob:https://web.telegram.org/8b9fdef0-d8f2-4d3b-952f-e597321148dc",
+      "blob:https://web.telegram.org/722c4533-9745-46e0-b921-41d39316d433",
+      "blob:https://web.telegram.org/b4428599-b24f-46ac-9859-530936848233",
+      "blob:https://web.telegram.org/b233f62e-3d18-459d-9f7d-0d665bd72b24",
+      "blob:https://web.telegram.org/5e4b066e-cf0f-46ec-bff6-5f7c0632af0f",
+      "blob:https://web.telegram.org/f2277d4f-e526-4811-a676-35bfc0b0547a",
+      "blob:https://web.telegram.org/9f0a856b-7799-4c41-a33b-831161b81efb"
     ],
-    "photosLink": "https://t.me/c/3949113875/3",
+    "photosLink": "",
     "availableFrom": "",
     "published": true,
-    "updatedAt": "2026-09-30T08:42:44.967Z",
+    "updatedAt": "2026-09-30T09:13:01.655Z",
     "leasePrice": 25000,
     "floorArea": 36,
     "bathrooms": 1
