@@ -1,19 +1,15 @@
 # Homeworth Realty Corp. site
 
-React + TypeScript + Vite, hosted on GitHub Pages. **No listings live in code.** They are read from `public/data/listings.json`; site copy, phone and hero image from `public/data/site.json`.
+React + TypeScript + Vite on GitHub Pages. Listings are data, not code: `public/data/listings.json`. Site copy, contacts and the inquiry recipients live in `public/data/site.json`. Uploaded photos live in `public/photos/`.
 
-## Set up
-1. Create a GitHub repo, push this folder to `main`.
-2. Settings → Pages → Source: **GitHub Actions**. Every push to `main` redeploys.
-3. Settings → Developer settings → Fine-grained tokens: create one for this repo only, permission **Contents: Read and write**.
-4. Open `https://<owner>.github.io/<repo>/#/admin`, enter owner, repo, branch and token, then Connect.
+## Deploy
+Settings → Pages → Source: **GitHub Actions**. Keep exactly one workflow file in `.github/workflows/`.
 
-## Adding listings
-- **Import CSV:** upload the sheet export. The header row is detected automatically, rows are previewed, existing listings are updated by web address/name instead of duplicated.
-- **Add listing:** manual form. **On site** checkbox hides a listing without deleting it.
-- **Publish to site** commits `listings.json`; Pages redeploys in about a minute. "Download JSON" works without a token.
+## Admin: `/#/admin`
+1. Connect with owner, repo, branch and a fine-grained token (Contents: read and write).
+2. **Import** your `.xlsx` (or CSV). Rows marked “Unlisted / Occupied” in Webpage import as hidden. Re-importing updates matching listings.
+3. **Add listing**: paste screenshots straight into the photo box (Ctrl/⌘+V), drop files, or choose photos. Images are resized, saved to `public/photos/`, and stored on the listing as a path.
+4. **Publish to site** makes ONE commit (listings + photos), so only one deploy runs.
 
-## Custom domain
-Add `public/CNAME` containing `homeworthrealtycorp.com` and point DNS to GitHub Pages, only when you are ready to leave Hostinger.
-
-`npm install && npm run dev` to run locally.
+## Inquiry form
+Sends through FormSubmit to `inquiry.to` with `inquiry.cc` copied (edit in `site.json`). The first submission after deploy sends an activation email to the `to` address; click the link once.
