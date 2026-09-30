@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import type { Listing, SiteConfig } from './types'
 import { collator, KIND_LABEL, money, recent, topPrice, where } from './format'
 import { F_AVAILABILITY, F_CATEGORY, CONDITION, SORTS } from './options'
@@ -23,6 +23,18 @@ function Site() {
   const [box, setBox] = useState<{ l: Listing; i: number } | null>(null)
   const [ask, setAsk] = useState('')
   const [f, setF] = useState({ avail: '', cat: '', cond: '', max: '', sort: 'recent' })
+  const heroRef = useRef<HTMLElement>(null)
+  const [scrolled, setScrolled] = useState(false)
+
+  // Parallax: one rAF-throttled scroll listener drives a single CSS variable (--p, 0 to 1) that the hero reads.
+  useEffect(() => {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+    let raf = 0
+    const tick = () => { raf = 0; const y = scrollY; if (!still) heroRef.current?.style.setProperty('--p', Math.min(1, y / innerHeight).toFixed(3)); setScrolled(s => ((y > 40) === s ? s : y > 40)) }
+    const on = () => { if (!raf) raf = requestAnimationFrame(tick) }
+    addEventListener('scroll', on, { passive: true }); tick()
+    return () => { removeEventListener('scroll', on); cancelAnimationFrame(raf) }
+  }, [])
 
   useEffect(() => {
     fetch('data/site.json').then(r => { if (!r.ok) throw new Error(`data/site.json returned ${r.status}`); return r.json() }).then((s: SiteConfig) => { setSite(s); document.title = `${s.name} | ${s.tagline}` }).catch((e: Error) => setErr(e.message))
@@ -45,31 +57,51 @@ function Site() {
     return out.sort(f.sort === 'high' ? (a, b) => pv(b) - pv(a) : f.sort === 'low' ? (a, b) => pv(a) - pv(b) : recent)
   }, [all, f])
 
+  // Scroll reveal: elements with .rv fade up the first time they enter the viewport.
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>('.rv:not([data-in])')
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { els.forEach(e => e.setAttribute('data-in', '1')); return }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.setAttribute('data-in', '1'); io.unobserve(e.target) } }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' })
+    els.forEach(e => io.observe(e)); return () => io.disconnect()
+  }, [shown, all, site])
+
   if (err) return <p style={{ padding: '2rem', font: '1rem system-ui' }}>The site could not load its settings ({err}). Check that the <code>public/data</code> folder is in your repository, then redeploy.</p>
   if (!site) return null
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
   const sel = (k: keyof typeof f, label: string, a: string, opts: readonly string[]) => <label key={k}>{label}<select value={f[k]} onChange={set(k)}><option value="">{a}</option>{opts.map(o => <option key={o}>{o}</option>)}</select></label>
 
   return (<>
-    <header className="hero" style={{ backgroundImage: `linear-gradient(105deg, rgba(10,32,36,.94) 30%, rgba(10,32,36,.4)), url(${site.heroImage})` }}>
-      <nav><img src={site.logo} alt={site.name} /><a href="#listings">Listings</a><a href="#about">About</a><a href="#contact">Contact</a></nav>
-      <h1>{site.tagline}</h1>
-      <form className="search" onSubmit={e => { e.preventDefault(); document.getElementById('listings')?.scrollIntoView({ behavior: 'smooth' }) }}>
-        {sel('avail', 'Availability', 'Any', F_AVAILABILITY)}
-        {sel('cat', 'Category', 'Any', F_CATEGORY)}
-        {sel('cond', 'Condition', 'Any', CONDITION)}
-        <label>Max price (₱)<input inputMode="numeric" placeholder="No limit" value={f.max} onChange={set('max')} /></label>
-        <label>Sort by<select value={f.sort} onChange={set('sort')}>{SORTS.map(([v, t]) => <option key={v} value={v}>{t}</option>)}</select></label>
-        <button>{all ? `Show ${shown.length} ${shown.length === 1 ? 'listing' : 'listings'}` : 'Search'}</button>
-      </form>
+    <div className={scrolled ? 'top solid' : 'top'}><nav><img src={site.logo} alt={site.name} /><a href="#find">Listings</a><a href="#about">About</a><a className="pill" href="#contact">Inquire</a></nav></div>
+    <header className="hero" ref={heroRef}>
+      <div className="hero-bg" style={{ backgroundImage: `url(${site.heroImage})` }} />
+      <div className="hero-shade" />
+      <div className="hero-copy">
+        <p className="eyebrow">{site.name}</p>
+        <h1 aria-label={site.tagline}>{site.tagline.split(' ').map((w, i, a) => <span key={i} aria-hidden className="w" style={{ '--i': i } as React.CSSProperties}><span className={i === a.length - 1 ? 'gold' : ''}>{w}</span>{' '}</span>)}</h1>
+        {site.heroSub && <p className="sub">{site.heroSub}</p>}
+        <a className="cta" href="#find">{all && all.length ? `Explore ${all.length} homes` : 'Explore homes'} <span aria-hidden>↓</span></a>
+      </div>
+      <span className="cue" aria-hidden />
     </header>
 
     <main>
+      <section id="find" className="wrap find">
+        <div className="head rv"><p className="eyebrow dark">Available now</p><h2>Find your home</h2></div>
+        <form className="filters rv" onSubmit={e => e.preventDefault()} style={{ '--d': '.1s' } as React.CSSProperties}>
+          {sel('avail', 'Availability', 'Any', F_AVAILABILITY)}
+          {sel('cat', 'Category', 'Any', F_CATEGORY)}
+          {sel('cond', 'Condition', 'Any', CONDITION)}
+          <label>Max price (₱)<input inputMode="numeric" placeholder="No limit" value={f.max} onChange={set('max')} /></label>
+          <label>Sort by<select value={f.sort} onChange={set('sort')}>{SORTS.map(([v, t]) => <option key={v} value={v}>{t}</option>)}</select></label>
+        </form>
+        <p className="results" role="status"><span>{all ? `${shown.length} ${shown.length === 1 ? 'listing' : 'listings'}` : ''}</span>
+          {(f.avail || f.cat || f.cond || f.max || f.sort !== 'recent') && <button onClick={() => setF({ avail: '', cat: '', cond: '', max: '', sort: 'recent' })}>Clear filters</button>}</p>
+      </section>
       <section id="listings" className="wrap">
         {all === null ? <p className="muted">Loading listings…</p> : shown.length === 0 ? (
           <p className="empty">{all.length ? 'No listings match those filters. Try widening the price or clearing a filter.' : 'No listings are published yet.'}</p>
-        ) : <div className="grid">{shown.map(l => (
-          <div key={l.id} className="card" role="button" tabIndex={0} aria-label={l.title} onClick={() => setOpen(l)} onKeyDown={e => e.key === 'Enter' && setOpen(l)}>
+        ) : <div className="grid">{shown.map((l, n) => (
+          <div key={l.id} className="card rv" style={{ '--d': `${(n % 3) * 0.09}s` } as React.CSSProperties} role="button" tabIndex={0} aria-label={l.title} onClick={() => setOpen(l)} onKeyDown={e => e.key === 'Enter' && setOpen(l)}>
             {l.photos.length ? <Carousel photos={l.photos} alt={l.title} /> : <div className="thumb"><span>{l.subtype || l.category}</span></div>}
             <div className="body">
               <Price l={l} />
@@ -80,7 +112,7 @@ function Site() {
           </div>))}</div>}
       </section>
 
-      <section id="about" className="wrap about">
+      <section id="about" className="wrap about rv">
         <h2>About Us</h2>
         <div>
           <h3>Our Objectives and Goals</h3><ul>{site.objectives.map((p, i) => <li key={i}>{p}</li>)}</ul>
@@ -88,7 +120,7 @@ function Site() {
           {site.story.map((p, i) => <p key={i}>{p}</p>)}
         </div>
       </section>
-      <section id="contact" className="wrap contact">
+      <section id="contact" className="wrap contact rv">
         <div><h2>Get in touch</h2><h3>Address</h3><p>{site.address}</p><h3>Contacts</h3>
           <p><a href={`tel:${site.phone}`}>{site.phone}</a></p>{site.emails.map(m => <p key={m}><a href={`mailto:${m}`}>{m}</a></p>)}</div>
         <Inquiry site={site} prefill={ask} />
