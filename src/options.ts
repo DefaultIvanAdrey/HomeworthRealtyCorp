@@ -5,5 +5,4 @@ export const AVAILABILITY = ['For Rent Only', 'For Sale Only', 'For Lease Only',
 export const CONDITION = ['Bare', 'Unfurnished', 'Semi-Furnished', 'Furnished', 'Fully Furnished']
 // Public filter choices
 export const F_AVAILABILITY = ['Rent', 'Sale', 'Lease']
-export const F_CATEGORY = ['House and Lot', 'House Only', 'Lot Only', 'Studio', '1 Bedroom', '2 Bedroom', '3 Bedroom', '4 Bedroom', '5 Bedroom', 'Commercial']
 export const SORTS = [['recent', 'Most Recent'], ['high', 'Price: High to Low'], ['low', 'Price: Low to High']] as const

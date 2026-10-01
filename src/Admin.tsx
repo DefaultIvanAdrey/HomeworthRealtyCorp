@@ -114,7 +114,7 @@ export default function Admin() {
 
     {tab === 'import' && <section>
       <label className="drop">Choose your listings spreadsheet (.xlsx or .csv)<input type="file" accept=".xlsx,.xls,.csv,text/csv" onChange={e => onFile(e.target.files?.[0])} /></label>
-      <p className="muted">Rows marked “Unlisted / Occupied” in the Webpage column are imported as hidden. Listings already here are updated, not duplicated, and photos you added in the admin are kept.</p>
+      <p className="muted">Rows marked “Unlisted / Occupied” in the Webpage column are imported as hidden. The sheet's Photos column is ignored. Listings already here are updated, not duplicated, and photos you added in the admin are kept.</p>
       {preview && <>
         <div className="tablewrap"><table><thead><tr><th>Listing</th><th>Location</th><th>Price</th><th>Status</th></tr></thead><tbody>{preview.map(({ listing: l, warnings }) => { const p = topPrice(l); return <tr key={l.id} className={l.published ? '' : 'dim'}>
           <td>{l.title}</td><td>{where(l)}</td><td>{p ? money(p.value) : '—'}</td>
@@ -139,7 +139,6 @@ export default function Admin() {
         {draft.photos.length > 0 && <div className="thumbs">{draft.photos.map((p, i) => <figure key={i}><img src={p} alt={`Photo ${i + 1}`} />
           <figcaption>{i === 0 ? 'Cover' : i + 1}{p.startsWith('data:') && <small> · new</small>}<span><button aria-label="Move earlier" onClick={() => move(i, -1)}>←</button><button aria-label="Move later" onClick={() => move(i, 1)}>→</button><button aria-label="Remove photo" onClick={() => setDraft(d => ({ ...d, photos: d.photos.filter((_, k) => k !== i) }))}>×</button></span></figcaption></figure>)}</div>}
       </div>
-      <label className="wide">Album link (optional)<input value={draft.photosLink} onChange={e => set('photosLink', e.target.value)} /></label>
       <label className="check"><input type="checkbox" checked={draft.negotiable} onChange={e => set('negotiable', e.target.checked)} /> Price is negotiable</label>
       <label className="check"><input type="checkbox" checked={draft.published} onChange={e => set('published', e.target.checked)} /> Show on the site</label>
       <div className="wide"><button className="btn" onClick={save}>Save listing</button></div>

@@ -10,7 +10,6 @@ const iso = (v: unknown) => {
   const t = s(v); const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/) ?? t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/)
   return !m ? '' : m[1].length === 4 ? `${m[1]}-${m[2]}-${m[3]}` : `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`
 }
-const IMG = /\.(jpe?g|png|webp|avif|gif)(\?|$)/i
 
 /** Reads the Homeworth workbook (.xlsx) or a CSV export. Finds the header row itself. */
 export async function parseListingsFile(file: File): Promise<ParsedRow[]> {
@@ -31,7 +30,6 @@ function build(rows: unknown[][], h: number): ParsedRow[] {
     const title = g('disctinction / project name', 'distinction / project name', 'project name')
     if (!title) return []
     const web = g('webpage'); const pk = num(raw('primary key'))
-    const urls = g('photos').split(/[\s,]+/).filter(u => u.startsWith('http'))
     const l: Listing = {
       ...blank(), title, pk, id: pk ? String(pk) : slug(title),
       category: g('category'), subtype: g('property subtype'), availability: g('availability'), condition: g('condition'),
@@ -42,13 +40,12 @@ function build(rows: unknown[][], h: number): ParsedRow[] {
       lotArea: num(raw('lot area')), floorArea: num(raw('floor area')), bedrooms: num(raw('bedroom')),
       bathrooms: num(raw('bathroom')), parking: num(raw('parking')), storey: num(raw('storey')),
       amenities: sortedUnique(g('amenities').split(',')),
-      remarks: g('remarks'), photos: urls.filter(u => IMG.test(u)), photosLink: urls.find(u => !IMG.test(u)) ?? '',
+      remarks: g('remarks'), photos: [], // the sheet's Photos column is intentionally ignored; photos are added in the admin
       availableFrom: iso(raw('availability date')), latestTransaction: iso(raw('latest transaction')),
       published: !/unlisted|occupied/i.test(web), updatedAt: new Date().toISOString(),
     }
     const warnings: string[] = []
     if (!l.salePrice && !l.monthlyRent && !l.leasePrice) warnings.push('No price')
-    if (!l.photos.length) warnings.push(l.photosLink ? 'Album link only, no photos yet' : 'No photos')
     return [{ listing: l, warnings }]
   })
 }
@@ -58,7 +55,7 @@ export function mergeListings(current: Listing[], incoming: Listing[]) {
   const list = [...current]; let added = 0, updated = 0
   for (const n of incoming) {
     const i = list.findIndex(o => o.id === n.id || slug(o.title) === slug(n.title))
-    if (i < 0) { list.push(n); added++ } else { const o = list[i]; list[i] = { ...o, ...n, id: o.id, photos: n.photos.length ? n.photos : o.photos, photosLink: n.photosLink || o.photosLink }; updated++ }
+    if (i < 0) { list.push(n); added++ } else { const o = list[i]; list[i] = { ...o, ...n, id: o.id, photos: o.photos }; updated++ }
   }
   return { list, added, updated }
 }
