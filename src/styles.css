@@ -129,4 +129,4 @@ section[id]{scroll-margin-top:3rem}
 @media(prefers-reduced-motion:reduce){.slides img{transition:none;transform:none}}
 
 /* monochrome: black-and-white the hero and About photo loop (listing photos stay in colour) */
-.hero-bg,.slides img{filter:grayscale(1) contrast(1.05)}
+.hero-bg,.slides img{filter:grayscale(0.15) contrast(1.05)}
