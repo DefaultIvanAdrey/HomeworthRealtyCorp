@@ -183,9 +183,9 @@
       "Air Conditioner",
       "Bed",
       "Dining Set",
+      "Fridge",
       "Lobby/Reception",
       "Microwave",
-      "Fridge",
       "Sofa Set"
     ],
     "remarks": "",
@@ -213,12 +213,12 @@
     "amenities": [
       "Air Conditioner",
       "Bed",
+      "Fridge",
       "Function Hall",
       "Laundry Area",
       "Maid's Room",
       "Oven",
       "Pets Allowed",
-      "Fridge",
       "Sofa Set",
       "Storage Room"
     ],
@@ -318,11 +318,11 @@
       "Air Conditioner",
       "Bed",
       "Dining Set",
+      "Fridge",
       "Gym",
       "Lobby/Reception",
-      "Fridge",
-      "Sofa Set",
-      "Microwave"
+      "Microwave",
+      "Sofa Set"
     ],
     "remarks": "",
     "photos": [],
@@ -379,8 +379,8 @@
       "Air Conditioner",
       "Bed",
       "Dining Set",
-      "WiFi",
-      "Sofa Set"
+      "Sofa Set",
+      "WiFi"
     ],
     "remarks": "",
     "photos": [],
@@ -406,8 +406,8 @@
     "amenities": [
       "24/7 Security Monitoring",
       "Bed",
-      "Lobby/Reception",
-      "Dining Set"
+      "Dining Set",
+      "Lobby/Reception"
     ],
     "remarks": "",
     "photos": [],
@@ -438,9 +438,9 @@
       "Air Conditioner",
       "Bed",
       "Dining Set",
+      "Fridge",
       "Lobby/Reception",
-      "Sofa Set",
-      "Fridge"
+      "Sofa Set"
     ],
     "remarks": "",
     "photos": [],
@@ -494,10 +494,10 @@
       "Air Conditioner",
       "Bed",
       "Dining Set",
+      "Fridge",
       "Laundry Area",
       "Maid's Room",
       "Pets Allowed",
-      "Fridge",
       "Sofa Set",
       "Storage Room",
       "Washing Machine",
@@ -531,8 +531,8 @@
     "amenities": [
       "24/7 Security Monitoring",
       "Bed",
-      "Lobby/Reception",
-      "Dining Set"
+      "Dining Set",
+      "Lobby/Reception"
     ],
     "remarks": "",
     "photos": [],
@@ -588,8 +588,8 @@
     "amenities": [
       "24/7 Security Monitoring",
       "Bed",
-      "Lobby/Reception",
-      "Dining Set"
+      "Dining Set",
+      "Lobby/Reception"
     ],
     "remarks": "",
     "photos": [],
@@ -619,11 +619,27 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/mckinley-garden-villas-mupinjm4-0.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-1.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-2.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-3.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-4.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-5.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-6.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-7.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-8.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-9.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-10.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-11.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-12.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-13.jpg",
+      "photos/mckinley-garden-villas-mupinjm4-14.jpg"
+    ],
     "photosLink": "https://t.me/c/3949113875/19",
     "availableFrom": "",
     "published": true,
-    "updatedAt": "2026-09-30T08:40:02.093Z",
+    "updatedAt": "2026-10-01T12:34:24.205Z",
     "leasePrice": 130000,
     "floorArea": 128,
     "bedrooms": 2,
