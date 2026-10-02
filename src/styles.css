@@ -81,9 +81,10 @@ td input[type=checkbox]{width:22px;min-height:22px}.dim{color:var(--muted);backg
 .hero-copy{position:relative;height:100%;max-width:1180px;margin:0 auto;padding:0 calc(1.25rem + var(--sr)) calc(5.5rem + var(--sb)) calc(1.25rem + var(--sl));display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;opacity:calc(1 - var(--p)*1.5);transform:translate3d(0,calc(var(--p)*-50px),0)}
 .eyebrow{font:600 .78rem var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 1.6rem;opacity:0;animation:fade 1s .1s forwards}
 .eyebrow.dark{color:var(--teal);opacity:1;animation:none;margin-bottom:.8rem}
-.hero h1{margin:0;font-size:clamp(3rem,10.5vw,8.5rem);line-height:.98;font-weight:700;max-width:13ch;letter-spacing:-.025em}
+.hero h1{margin:0;font-size:clamp(3rem,10.5vw,8.5rem);line-height:.98;font-weight:700;max-width:13ch;letter-spacing:-.025em;  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35))
+          drop-shadow(0 14px 34px rgba(0, 0, 0, .45));}
 .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .02em .16em;margin:-.04em -.02em -.16em}
-.w>span{display:inline-block;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.2s + var(--i)*.1s)}.w>.gold{color:#bdbdbd;font-style:italic;padding-right:.06em}
+.w>span{display:inline-block;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.2s + var(--i)*.1s)}.w>.gold{color:#ffffff;font-style:italic;padding-right:.06em}
 .sub{max-width:36ch;font-size:clamp(1rem,2.2vw,1.3rem);line-height:1.5;color:#e6e6e6;margin:2rem 0 0;opacity:0;animation:fade 1s .9s forwards}
 .cta{margin-top:2.4rem;display:inline-flex;gap:.7rem;align-items:center;color:#fff;text-decoration:none;font-weight:600;border-bottom:1px solid var(--gold);padding:.7rem 0;opacity:0;animation:fade 1s 1.2s forwards}
 .cta span{transition:transform .2s}.cta:hover span{transform:translateY(4px)}
@@ -130,3 +131,13 @@ section[id]{scroll-margin-top:3rem}
 
 /* monochrome: black-and-white the hero and About photo loop (listing photos stay in colour) */
 .hero-bg,.slides img{filter:grayscale(0.15) contrast(1.05)}
+
+.hero .eyebrow,
+.hero .sub,
+.hero .cta,
+.top:not(.solid) a {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 4px 18px rgba(0, 0, 0, .45);
+}
+.top:not(.solid) img {
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .45));
+}
