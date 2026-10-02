@@ -2,11 +2,11 @@
  "name": "Homeworth Realty Corp.",
  "tagline": "Afford a home assured of its worth.",
  "heroImage": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1920",
- "logo": "https://assets.zyrosite.com/YrD4EEBOzVi8ErO2/hw-logo-white-2mGhyW1LuCO2x6dd.svg",
+ "logo": "logo.svg",
  "phone": "+639178630010",
  "emails": [
   "theadavenport@homeworthrealtycorp.com",
-  "madoloresng@homeoworthrealtycorp.com"
+  "madoloresng@homeworthrealtycorp.com"
  ],
  "address": "Quezon City, Philippines",
  "objectives": [
@@ -28,7 +28,7 @@
  "inquiry": {
   "to": "theadavenport@homeworthrealtycorp.com",
   "cc": [
-   "madoloresng@homeoworthrealtycorp.com",
+   "madoloresng@homeworthrealtycorp.com",
    "ivanadrey@proton.me"
   ],
   "subject": "New inquiry from homeworthrealtycorp.com"
