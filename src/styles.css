@@ -812,7 +812,7 @@ td input[type="checkbox"] {
   animation-delay: calc(0.2s + var(--i) * 0.1s);
 }
 .w > .gold {
-  color: #bdbdbd;
+  color: #ffffff;
   font-style: italic;
   padding-right: 0.06em;
 }
