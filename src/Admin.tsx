@@ -41,6 +41,7 @@ export default function Admin() {
 
   const connect = () => { localStorage.setItem('hw-gh', JSON.stringify(cfg)); sessionStorage.setItem('hw-token', token); load() }
   const publish = async () => {
+    if (list.length === 0 && JSON.parse(base).length > 0 && !confirm('This will publish ZERO listings and remove all current ones from the site. Continue?')) return
     setBusy(true)
     try {
       const files: FileOut[] = []; const stamp = Date.now().toString(36)
