@@ -1,6 +1,6 @@
 {
  "name": "Homeworth Realty Corp.",
- "tagline": "Afford a home assured of its worth.",
+ "tagline": "Afford a home\nassured of its worth.",
  "heroImage": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1920",
  "logo": "logo.svg",
  "phone": "+639178630010",
@@ -24,14 +24,5 @@
  "story": [
   "Homeworth Realty Corp is a company incorporated by a family-oriented group of friends. It is a plan executed, an action performed, and a picture come to life.",
   "Our friendship started as early as 1991. And our real estate job in 1998 became our forte, which eventually turned out to be our passion. It is a job that we cannot leave—but live. As long as the need for shelter and business addresses continuously arises… And so, it means forever."
- ],
- "inquiry": {
-  "to": "theadavenport@homeworthrealtycorp.com",
-  "cc": [
-   "madoloresng@homeworthrealtycorp.com",
-   "ivanadrey@proton.me"
-  ],
-  "subject": "New inquiry from homeworthrealtycorp.com"
- },
- "heroSub": "Trading and leasing condominiums, houses, lots and commercial properties."
+ ]
 }

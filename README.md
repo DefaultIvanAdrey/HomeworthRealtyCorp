@@ -11,8 +11,6 @@ Settings → Pages → Source: **GitHub Actions**. Keep exactly one workflow fil
 3. **Add listing**: paste screenshots straight into the photo box (Ctrl/⌘+V), drop files, or choose photos. Images are resized, saved to `public/photos/`, and stored on the listing as a path.
 4. **Publish to site** makes ONE commit (listings + photos), so only one deploy runs.
 
-## Inquiry form
-Sends through FormSubmit to `inquiry.to` with `inquiry.cc` copied (edit in `site.json`). The first submission after deploy sends an activation email to the `to` address; click the link once.
 
 ## About Us slideshow
 Every image in `public/photos/` (including photos pasted through the admin) is listed at build time into `photos/index.json` and loops under the About glass panel. The sheet's Photos column is not used.

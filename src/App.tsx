@@ -22,7 +22,6 @@ function Site() {
   const [err, setErr] = useState('')
   const [open, setOpen] = useState<Listing | null>(null)
   const [box, setBox] = useState<{ l: Listing; i: number } | null>(null)
-  const [ask, setAsk] = useState('')
   const [gallery, setGallery] = useState<string[]>([])
   const [f, setF] = useState(NOFILTER)
   const heroRef = useRef<HTMLElement>(null)
@@ -39,7 +38,7 @@ function Site() {
   }, [])
 
   useEffect(() => {
-    fetch('data/site.json').then(r => { if (!r.ok) throw new Error(`data/site.json returned ${r.status}`); return r.json() }).then((s: SiteConfig) => { setSite(s); document.title = `${s.name} | ${s.tagline}` }).catch((e: Error) => setErr(e.message))
+    fetch('data/site.json').then(r => { if (!r.ok) throw new Error(`data/site.json returned ${r.status}`); return r.json() }).then((s: SiteConfig) => { setSite(s); document.title = `${s.name} | ${s.tagline.replace('\n', ' ')}` }).catch((e: Error) => setErr(e.message))
     fetch('photos/index.json?' + Date.now()).then(r => r.json()).then((p: string[]) => setGallery(p.map(x => 'photos/' + x))).catch(() => {})
     fetch('data/listings.json?' + Date.now()).then(r => r.json()).then((l: Listing[]) => setAll(l.filter(x => x.published))).catch(() => setAll([]))
   }, [])
@@ -76,18 +75,19 @@ function Site() {
 
   if (err) return <p style={{ padding: '2rem', font: '1rem system-ui' }}>The site could not load its settings ({err}). Check that the <code>public/data</code> folder is in your repository, then redeploy.</p>
   if (!site) return null
+  const lines = site.tagline.split('\n')
+  const offs = lines.map((_, li) => lines.slice(0, li).reduce((t, l) => t + l.split(' ').length, 0))
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
   const sel = (k: keyof typeof f, label: string, a: string, opts: readonly string[]) => <label key={k}>{label}<select value={f[k]} onChange={set(k)}><option value="">{a}</option>{opts.map(o => <option key={o}>{o}</option>)}</select></label>
 
   return (<>
-    <div className={scrolled ? 'top solid' : 'top'}><nav><img src={site.logo} alt={site.name} /><a href="#find">Listings</a><a href="#about">About</a><a className="pill" href="#contact">Inquire</a></nav></div>
+    <div className={scrolled ? 'top solid' : 'top'}><nav><img src={site.logo} alt={site.name} /><a href="#find">Listings</a><a href="#about">About</a><a className="pill" href="#contact">Contact</a></nav></div>
     <header className="hero" ref={heroRef}>
       <img className="hero-bg" src={site.heroImage} alt="" decoding="async" onError={e => { e.currentTarget.style.display = 'none' }} />
       <div className="hero-shade" />
       <div className="hero-copy">
         <p className="eyebrow">{site.name}</p>
-        <h1 aria-label={site.tagline}>{site.tagline.split(' ').map((w, i, a) => <Fragment key={i}><span aria-hidden className="w" style={{ '--i': i } as React.CSSProperties}><span className={i === a.length - 1 ? 'gold' : ''}>{w}</span></span>{' '}</Fragment>)}</h1>
-        {site.heroSub && <p className="sub">{site.heroSub}</p>}
+        <h1 aria-label={site.tagline.replace('\n', ' ')}>{lines.map((line, li) => <span key={li} className="ln">{line.split(' ').map((w, i, a) => { const last = li === lines.length - 1 && i === a.length - 1; const word = <span aria-hidden className="w" style={{ '--i': offs[li] + i } as React.CSSProperties}><span className={last ? 'gold' : ''}>{w}</span></span>; return <Fragment key={i}>{last ? <span className="wglow">{word}</span> : word}{i < a.length - 1 ? ' ' : ''}</Fragment> })}</span>)}</h1>
         <a className="cta" href="#find">{all && all.length ? `Explore ${all.length} homes` : 'Explore homes'} <span aria-hidden>↓</span></a>
       </div>
       <span className="cue" aria-hidden />
@@ -135,18 +135,24 @@ function Site() {
           </div>
         </div>
       </section>
-      <section id="contact" className="wrap contact rv">
-        <div><h2>Get in touch</h2><h3>Address</h3><p>{site.address}</p><h3>Contacts</h3>
-          <p><a href={`tel:${site.phone}`}>{site.phone}</a></p>{site.emails.map(m => <p key={m}><a href={`mailto:${m}`}>{m}</a></p>)}</div>
-        <Inquiry site={site} prefill={ask} />
-      </section>
     </main>
-    <footer className="foot">
-      <div className="foot-in">
-        <img className="foot-logo" src={site.logo} alt={site.name} />
-        <div className="foot-story">{site.story.map((p, i) => <p key={i}>{p}</p>)}</div>
+    <footer className="foot" id="contact">
+      <div className="foot-grid">
+        <div className="foot-brand">
+          <img className="foot-logo" src={site.logo} alt={site.name} />
+          <div className="foot-story">{site.story.map((p, i) => <p key={i}>{p}</p>)}</div>
+        </div>
+        <div className="foot-contact">
+          <div>
+            <h2>Get in touch</h2>
+            <h3>Address</h3><p>{site.address}</p>
+            <h3>Contacts</h3>
+            <p><a href={`tel:${site.phone}`}>{site.phone}</a></p>
+            {site.emails.map(m => <p key={m}><a href={`mailto:${m}`}>{m}</a></p>)}
+          </div>
+          <p className="copy">© {new Date().getFullYear()} {site.name}</p>
+        </div>
       </div>
-      <p className="copy">© {new Date().getFullYear()} {site.name}</p>
     </footer>
 
     {open && <div className="scrim" onClick={() => setOpen(null)}><article className="sheet" role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
@@ -161,7 +167,7 @@ function Site() {
         {open.amenities.length > 0 && <p className="tags">{[...open.amenities].sort(collator.compare).map(a => <span key={a}>{a}</span>)}</p>}
         {open.remarks && <p className="remarks">{open.remarks}</p>}
         <div className="actions"><a className="btn" href={`tel:${site.phone}`}>Call us</a>
-          <button className="btn ghost" onClick={() => { setAsk(`Hi, I'm interested in ${open.title}.`); setOpen(null); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 50) }}>Send inquiry</button>
+          <a className="btn ghost" href={`mailto:${site.emails[0]}?cc=${site.emails.slice(1).join(',')}&subject=${encodeURIComponent('Inquiry: ' + open.title)}`}>Email us</a>
 </div>
       </div>
     </article></div>}
@@ -179,37 +185,4 @@ function Slides({ photos }: { photos: string[] }) {
     const t = setInterval(() => setI(x => (x + 1) % list.length), 5500); return () => clearInterval(t)
   }, [list.length])
   return <div className="slides" aria-hidden>{list.map((p, k) => <img key={p} src={p} alt="" loading={k < 2 ? 'eager' : 'lazy'} className={k === i ? 'on' : ''} />)}</div>
-}
-
-function Inquiry({ site, prefill }: { site: SiteConfig; prefill: string }) {
-  const [st, setSt] = useState<'idle' | 'sending' | 'ok' | 'err'>('idle')
-  const [msg, setMsg] = useState(prefill)
-  const [mail, setMail] = useState('')
-  useEffect(() => { if (prefill) setMsg(prefill) }, [prefill])
-  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); const form = e.currentTarget; const d = new FormData(form)
-    if (d.get('_honey')) return
-    setSt('sending')
-    const body = { name: String(d.get('name')), mobile: String(d.get('mobile')), email: String(d.get('email')), message: msg }
-    setMail(`mailto:${site.inquiry.to}?cc=${encodeURIComponent(site.inquiry.cc.join(','))}&subject=${encodeURIComponent(site.inquiry.subject)}&body=${encodeURIComponent(`Name: ${body.name}\nMobile: ${body.mobile}\nEmail: ${body.email}\n\n${body.message}`)}`)
-    try {
-      const r = await fetch(`https://formsubmit.co/ajax/${site.inquiry.to}`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ ...body, _subject: site.inquiry.subject, _cc: site.inquiry.cc.join(','), _template: 'table', _captcha: 'false' }) })
-      const j = await r.json().catch(() => ({}))
-      if (!r.ok || String(j.success) === 'false') throw new Error()   // FormSubmit answers 200 with success:"false" until the recipient has activated it
-      setSt('ok'); form.reset(); setMsg('')
-    } catch { setSt('err') }
-  }
-  return (
-    <form className="inquiry" onSubmit={submit}>
-      <h3>Send us an inquiry</h3>
-      <label>Name*<input name="name" required autoComplete="name" placeholder="Your name" /></label>
-      <label>Mobile Number*<input name="mobile" type="tel" required autoComplete="tel" placeholder="+63 123 456 7890" /></label>
-      <label>Your email*<input name="email" type="email" required autoComplete="email" placeholder="Your email address" /></label>
-      <label>Message*<textarea name="message" required rows={4} placeholder="Enter your message" value={msg} onChange={e => setMsg(e.target.value)} /></label>
-      <input name="_honey" tabIndex={-1} autoComplete="off" style={{ display: 'none' }} />
-      <button className="btn" disabled={st === 'sending'}>{st === 'sending' ? 'Sending…' : 'Submit'}</button>
-      <p role="status" className={st === 'err' ? 'bad' : 'ok'}>{st === 'ok' ? 'Thank you. We received your inquiry and will get back to you soon.' : st === 'err' ? <>That did not send. <a href={mail}>Open it in your email app instead</a>, or call us.</> : ''}</p>
-    </form>
-  )
 }
