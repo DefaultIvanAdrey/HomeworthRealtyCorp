@@ -325,9 +325,7 @@ function Site() {
       <header className="hero" ref={heroRef}>
         <img
           className="hero-bg"
-          src={
-            "public/photos/Cover-Photo(fabian-kuhne-zVwBT5i2SoE-unsplash).jpg"
-          }
+          src="public/photos/Cover-Photo(fabian-kuhne-zVwBT5i2SoE-unsplash).jpg"
           alt=""
           decoding="async"
           onError={(e) => {
