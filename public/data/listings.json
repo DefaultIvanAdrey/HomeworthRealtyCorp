@@ -23,7 +23,7 @@
       "Playground",
       "Swimming Pool"
     ],
-    "remarks": "â¢ 1 Maids-room\nâ¢ 1 Powder Room",
+    "remarks": "• 1 Maids-room\n• 1 Powder Room",
     "photos": [],
     "availableFrom": "2026-09-17",
     "latestTransaction": "",
@@ -56,7 +56,7 @@
       "Playground",
       "Swimming Pool"
     ],
-    "remarks": "â¢ With Balcony",
+    "remarks": "• With Balcony",
     "photos": [],
     "availableFrom": "2026-09-09",
     "latestTransaction": "",
@@ -96,7 +96,7 @@
       "Sofa Set",
       "Swimming Pool"
     ],
-    "remarks": "â¢ With Balcony\nâ¢ 1 Tandem Parking at Basement 1",
+    "remarks": "• With Balcony\n• 1 Tandem Parking at Basement 1",
     "photos": [],
     "availableFrom": "2026-09-09",
     "latestTransaction": "",
@@ -165,7 +165,7 @@
       "Dining Set",
       "Sofa Set"
     ],
-    "remarks": "â¢ Inclusive of Association Dues",
+    "remarks": "• Inclusive of Association Dues",
     "photos": [],
     "availableFrom": "2026-08-03",
     "latestTransaction": "",
@@ -235,7 +235,7 @@
       "Sofa Set",
       "Storage Room"
     ],
-    "remarks": "â¢ Just 10 minutes away from Ateneo de Manila University!\nâ¢ Beside the Clubhouse\nâ¢ Modern Tropical-Inspired Design\nâ¢ 5 Bedrooms has its own bathroom (including Maidâs Room)\nâ¢ Master Suite with En-Suite Bath, Walk-In Closet & Balcony\nâ¢ Cozy Family Lounge Area\nâ¢ Roof Deck with BBQ Space & Breathtaking Views\nâ¢ Stylish Modern Kitchen + Separate Dirty Kitchen / Laundry Area\nâ¢ Premium Bathroom Fixtures\nâ¢  Beautifully Landscaped Garden\nâ¢  Prime Spot â Just Near the Gate\nâ¢  Peaceful, Secure & Friendly Community",
+    "remarks": "• Just 10 minutes away from Ateneo de Manila University!\n• Beside the Clubhouse\n• Modern Tropical-Inspired Design\n• 5 Bedrooms has its own bathroom (including Maid’s Room)\n• Master Suite with En-Suite Bath, Walk-In Closet & Balcony\n• Cozy Family Lounge Area\n• Roof Deck with BBQ Space & Breathtaking Views\n• Stylish Modern Kitchen + Separate Dirty Kitchen / Laundry Area\n• Premium Bathroom Fixtures\n•  Beautifully Landscaped Garden\n•  Prime Spot — Just Near the Gate\n•  Peaceful, Secure & Friendly Community",
     "photos": [],
     "availableFrom": "2026-08-02",
     "latestTransaction": "",
@@ -266,7 +266,7 @@
       "24/7 Security Monitoring",
       "Lobby/Reception"
     ],
-    "remarks": "**Longterm Parking Fee:** â±8,000/mo\n**Longterm Rental w/ Carpark:** â±35,000/mo",
+    "remarks": "**Longterm Parking Fee:** ₱8,000/mo\n**Longterm Rental w/ Carpark:** ₱35,000/mo",
     "photos": [],
     "availableFrom": "2026-05-03",
     "latestTransaction": "",
@@ -611,7 +611,7 @@
       "Bed",
       "Lobby/Reception"
     ],
-    "remarks": "â¢ 2 Aircon",
+    "remarks": "• 2 Aircon",
     "photos": [],
     "availableFrom": "2026-02-28",
     "latestTransaction": "",
@@ -648,7 +648,7 @@
       "Washing Machine",
       "Water Heater"
     ],
-    "remarks": "â¢ Near Beach\nâ¢ Boundary of Caraitan",
+    "remarks": "• Near Beach\n• Boundary of Caraitan",
     "photos": [],
     "availableFrom": "2025-12-31",
     "latestTransaction": "",
@@ -703,7 +703,7 @@
     "unit": "Unit 625, Tower 3",
     "street": "NAIA Garden Residences",
     "district": "Bayport West",
-    "municipality": "ParaÃ±aque",
+    "municipality": "Parañaque",
     "amenities": [
       "24/7 Security Monitoring",
       "Bed",
@@ -832,7 +832,7 @@
       "Dining Set",
       "Lobby/Reception"
     ],
-    "remarks": "â¢ No Refridgerator\nâ¢ No Stove\nâ¢ As is, where is.",
+    "remarks": "• No Refridgerator\n• No Stove\n• As is, where is.",
     "photos": [],
     "availableFrom": "2025-12-26",
     "latestTransaction": "2026-02-02",
@@ -985,11 +985,19 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/241-muwbtfgj-0.jpg",
+      "photos/241-muwbtfgj-1.jpg",
+      "photos/241-muwbtfgj-2.jpg",
+      "photos/241-muwbtfgj-3.jpg",
+      "photos/241-muwbtfgj-4.jpg",
+      "photos/241-muwbtfgj-5.jpg",
+      "photos/241-muwbtfgj-6.jpg"
+    ],
     "availableFrom": "2025-12-26",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.782Z",
+    "updatedAt": "2026-10-06T06:57:19.688Z",
     "pk": 241,
     "leasePrice": 25000,
     "floorArea": 36,
