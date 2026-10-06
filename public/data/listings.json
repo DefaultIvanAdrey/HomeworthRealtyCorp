@@ -864,11 +864,18 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/245-muwne78q-0.jpg",
+      "photos/245-muwne78q-1.jpg",
+      "photos/245-muwne78q-2.jpg",
+      "photos/245-muwne78q-3.jpg",
+      "photos/245-muwne78q-4.jpg",
+      "photos/245-muwne78q-5.jpg"
+    ],
     "availableFrom": "2025-12-26",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.782Z",
+    "updatedAt": "2026-10-06T12:21:26.558Z",
     "pk": 245,
     "leasePrice": 40000,
     "floorArea": 46,
