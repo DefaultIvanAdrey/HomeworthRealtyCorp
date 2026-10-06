@@ -133,7 +133,6 @@ function Site() {
             <div><h3>Our Objectives and Goals</h3><ul>{site.objectives.map((p, i) => <li key={i}>{p}</li>)}</ul></div>
             <div><h3>Our Business and Targets</h3><ul>{site.business.map((p, i) => <li key={i}>{p}</li>)}</ul></div>
           </div>
-          {site.story.map((p, i) => <p key={i}>{p}</p>)}
         </div>
       </section>
       <section id="contact" className="wrap contact rv">
@@ -142,7 +141,13 @@ function Site() {
         <Inquiry site={site} prefill={ask} />
       </section>
     </main>
-    <footer className="foot">© {new Date().getFullYear()} {site.name}</footer>
+    <footer className="foot">
+      <div className="foot-in">
+        <img className="foot-logo" src={site.logo} alt={site.name} />
+        <div className="foot-story">{site.story.map((p, i) => <p key={i}>{p}</p>)}</div>
+      </div>
+      <p className="copy">© {new Date().getFullYear()} {site.name}</p>
+    </footer>
 
     {open && <div className="scrim" onClick={() => setOpen(null)}><article className="sheet" role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
       <span className="grab" aria-hidden />
