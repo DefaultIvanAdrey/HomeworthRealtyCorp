@@ -1,9 +1,9 @@
 import * as XLSX from 'xlsx'
 import { blank, type Listing } from './types'
-import { slug, sortedUnique } from './format'
+import { fixText, slug, sortedUnique } from './format'
 
 export interface ParsedRow { listing: Listing; warnings: string[] }
-const s = (v: unknown) => (v == null ? '' : String(v).trim())
+const s = (v: unknown) => (v == null ? '' : fixText(String(v).trim()))
 const num = (v: unknown) => { const n = typeof v === 'number' ? v : parseFloat(s(v).replace(/[^0-9.]/g, '')); return n > 0 ? n : undefined }
 const iso = (v: unknown) => {
   if (typeof v === 'number' && v > 20000) return new Date(Math.round((v - 25569) * 864e5)).toISOString().slice(0, 10) // Excel serial → date, no timezone drift
@@ -13,7 +13,7 @@ const iso = (v: unknown) => {
 
 /** Reads the Homeworth workbook (.xlsx) or a CSV export. Finds the header row itself. */
 export async function parseListingsFile(file: File): Promise<ParsedRow[]> {
-  const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), { type: 'array' })
+  const wb = XLSX.read(new Uint8Array(await file.arrayBuffer()), { type: 'array', codepage: 65001 })
   for (const name of wb.SheetNames) {
     const rows = XLSX.utils.sheet_to_json<unknown[]>(wb.Sheets[name], { header: 1, defval: '', raw: true })
     const h = rows.findIndex(r => r.some(c => s(c) === 'Property Subtype') && r.some(c => s(c) === 'Category'))

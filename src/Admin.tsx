@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { blank, type Listing } from './types'
-import { KIND_LABEL, money, slug, sortedUnique, topPrice, where } from './format'
+import { cleanListing, KIND_LABEL, money, slug, sortedUnique, topPrice, where } from './format'
 import { AVAILABILITY, CATEGORY, CONDITION, SUBTYPE } from './options'
 import { mergeListings, parseListingsFile, type ParsedRow } from './import'
 import { commit, pull, type FileOut, type GhCfg } from './github'
@@ -33,7 +33,7 @@ export default function Admin() {
   const load = async () => {
     try {
       const d = ready ? await pull(cfg, token) : await (await fetch('data/listings.json?' + Date.now())).json()
-      setList(d); setBase(JSON.stringify(d)); if (ready) say(`Loaded ${d.length} listings from GitHub.`)
+      setList(d.map(cleanListing)); setBase(JSON.stringify(d)); if (ready) say(`Loaded ${d.length} listings from GitHub.`)
     } catch (e) { say((e as Error).message, false) }
   }
   useEffect(() => { load() }, []) // eslint-disable-line

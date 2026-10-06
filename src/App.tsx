@@ -1,6 +1,6 @@
 import { Fragment, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import type { Listing, SiteConfig } from './types'
-import { collator, KIND_LABEL, money, recent, topPrice, where } from './format'
+import { cleanListing, collator, KIND_LABEL, money, recent, topPrice, where } from './format'
 import { F_AVAILABILITY, CATEGORY, SUBTYPE, CONDITION, SORTS } from './options'
 import Carousel from './Carousel'
 
@@ -26,6 +26,27 @@ function Site() {
   const [f, setF] = useState(NOFILTER)
   const heroRef = useRef<HTMLElement>(null)
   const [scrolled, setScrolled] = useState(false)
+  const sheetRef = useRef<HTMLElement>(null)
+  const drag = useRef<{ y: number; t: number; dy: number } | null>(null)
+
+  // Back button / swipe-back closes the popup instead of leaving the site: opening pushes a history entry, closing pops it.
+  const openSheet = (l: Listing) => { history.pushState({ hwSheet: 1 }, ''); setOpen(l) }
+  const openBox = (l: Listing, i: number) => { history.pushState({ hwSheet: 1, hwBox: 1 }, ''); setBox({ l, i }) }
+  const closeSheet = () => (history.state?.hwSheet ? history.back() : setOpen(null))
+  const closeBox = () => (history.state?.hwBox ? history.back() : setBox(null))
+  useEffect(() => {
+    const pop = () => { const st = history.state || {}; if (!st.hwBox) setBox(null); if (!st.hwSheet) setOpen(null) }
+    addEventListener('popstate', pop); return () => removeEventListener('popstate', pop)
+  }, [])
+
+  // Drag the handle down to dismiss the popup (phones).
+  const dragStart = (e: React.PointerEvent<HTMLDivElement>) => { e.currentTarget.setPointerCapture?.(e.pointerId); drag.current = { y: e.clientY, t: performance.now(), dy: 0 }; if (sheetRef.current) sheetRef.current.style.transition = 'none' }
+  const dragMove = (e: React.PointerEvent<HTMLDivElement>) => { const d = drag.current; if (!d || !sheetRef.current) return; d.dy = Math.max(0, e.clientY - d.y); sheetRef.current.style.transform = `translateY(${d.dy}px)` }
+  const dragEnd = () => {
+    const d = drag.current; const el = sheetRef.current; drag.current = null; if (!d || !el) return
+    el.style.transition = 'transform .25s cubic-bezier(.2,.8,.2,1)'
+    if (d.dy > 110 || (d.dy > 30 && d.dy / Math.max(1, performance.now() - d.t) > 0.6)) { el.style.transform = 'translateY(100%)'; setTimeout(closeSheet, 220) } else el.style.transform = ''
+  }
 
   // Parallax: one rAF-throttled scroll listener drives a single CSS variable (--p, 0 to 1) that the hero reads.
   useEffect(() => {
@@ -40,10 +61,10 @@ function Site() {
   useEffect(() => {
     fetch('data/site.json').then(r => { if (!r.ok) throw new Error(`data/site.json returned ${r.status}`); return r.json() }).then((s: SiteConfig) => { setSite(s); document.title = `${s.name} | ${s.tagline.replace('\n', ' ')}` }).catch((e: Error) => setErr(e.message))
     fetch('photos/index.json?' + Date.now()).then(r => r.json()).then((p: string[]) => setGallery(p.map(x => 'photos/' + x))).catch(() => {})
-    fetch('data/listings.json?' + Date.now()).then(r => r.json()).then((l: Listing[]) => setAll(l.filter(x => x.published))).catch(() => setAll([]))
+    fetch('data/listings.json?' + Date.now()).then(r => r.json()).then((l: Listing[]) => setAll(l.map(cleanListing).filter(x => x.published))).catch(() => setAll([]))
   }, [])
   useEffect(() => {
-    const k = (e: KeyboardEvent) => e.key === 'Escape' && (box ? setBox(null) : setOpen(null))
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && (box ? closeBox() : closeSheet())
     addEventListener('keydown', k); return () => removeEventListener('keydown', k)
   }, [box])
   useEffect(() => { document.body.style.overflow = open || box ? 'hidden' : ''; return () => { document.body.style.overflow = '' } }, [open, box])
@@ -86,11 +107,10 @@ function Site() {
       <img className="hero-bg" src={site.heroImage} alt="" decoding="async" onError={e => { e.currentTarget.style.display = 'none' }} />
       <div className="hero-shade" />
       <div className="hero-copy">
-        <p className="eyebrow">{site.name}</p>
-        <h1 aria-label={site.tagline.replace('\n', ' ')}>{lines.map((line, li) => <span key={li} className="ln">{line.split(' ').map((w, i, a) => { const last = li === lines.length - 1 && i === a.length - 1; const word = <span aria-hidden className="w" style={{ '--i': offs[li] + i } as React.CSSProperties}><span className={last ? 'gold' : ''}>{w}</span></span>; return <Fragment key={i}>{last ? <span className="wglow">{word}</span> : word}{i < a.length - 1 ? ' ' : ''}</Fragment> })}</span>)}</h1>
+        <h1 aria-label={site.tagline.replace('\n', ' ')}>{lines.map((line, li) => <span key={li} className="ln">{line.split(' ').map((w, i, a) => { const last = li === lines.length - 1 && i === a.length - 1; const word = <span aria-hidden className="w" style={{ '--i': offs[li] + i } as React.CSSProperties}><span className={last ? 'gold' : ''}>{w}</span></span>; return <Fragment key={i}>{word}{i < a.length - 1 ? ' ' : ''}</Fragment> })}</span>)}</h1>
         <a className="cta" href="#find">{all && all.length ? `Explore ${all.length} homes` : 'Explore homes'} <span aria-hidden>↓</span></a>
       </div>
-      <span className="cue" aria-hidden />
+      <a className="cue" href="#find" aria-label="Scroll down to the listings"><span>Scroll</span><i aria-hidden /></a>
     </header>
 
     <main>
@@ -114,7 +134,7 @@ function Site() {
         {all === null ? <p className="muted">Loading listings…</p> : shown.length === 0 ? (
           <p className="empty">{all.length ? 'No listings match those filters. Try widening the price or clearing a filter.' : 'No listings are published yet.'}</p>
         ) : <div className="grid">{shown.map((l, n) => (
-          <div key={l.id} className="card rv" style={{ '--d': `${(n % 3) * 0.09}s` } as React.CSSProperties} role="button" tabIndex={0} aria-label={l.title} onClick={() => setOpen(l)} onKeyDown={e => e.key === 'Enter' && setOpen(l)}>
+          <div key={l.id} className="card rv" style={{ '--d': `${(n % 3) * 0.09}s` } as React.CSSProperties} role="button" tabIndex={0} aria-label={l.title} onClick={() => openSheet(l)} onKeyDown={e => e.key === 'Enter' && openSheet(l)}>
             {l.photos.length ? <Carousel photos={l.photos} alt={l.title} /> : <div className="thumb"><span>{l.subtype || l.category}</span></div>}
             <div className="body">
               <Price l={l} />
@@ -155,10 +175,10 @@ function Site() {
       </div>
     </footer>
 
-    {open && <div className="scrim" onClick={() => setOpen(null)}><article className="sheet" role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
-      <span className="grab" aria-hidden />
-      <button className="close" onClick={() => setOpen(null)} aria-label="Close">×</button>
-      {open.photos.length > 0 && <Carousel photos={open.photos} alt={open.title} onSelect={i => setBox({ l: open, i })} />}
+    {open && <div className="scrim" onClick={closeSheet}><article className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
+      <div className="grab" aria-hidden onPointerDown={dragStart} onPointerMove={dragMove} onPointerUp={dragEnd} onPointerCancel={dragEnd} />
+      <button className="close" onClick={closeSheet} aria-label="Close">×</button>
+      {open.photos.length > 0 && <Carousel photos={open.photos} alt={open.title} onSelect={i => openBox(open, i)} />}
       <div className="pad">
         <Price l={open} />
         <h2>{open.title}</h2>
@@ -172,7 +192,7 @@ function Site() {
       </div>
     </article></div>}
 
-    {box && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button className="close" onClick={() => setBox(null)} aria-label="Close photo viewer">×</button><Carousel photos={box.l.photos} alt={box.l.title} start={box.i} contain /></div>}
+    {box && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button className="close" onClick={closeBox} aria-label="Close photo viewer">×</button><Carousel photos={box.l.photos} alt={box.l.title} start={box.i} contain /></div>}
   </>)
 }
 
