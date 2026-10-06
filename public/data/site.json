@@ -1,28 +1,28 @@
 {
- "name": "Homeworth Realty Corp.",
- "tagline": "Afford a home\nassured of its worth.",
- "heroImage": "https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1920",
- "logo": "logo.svg",
- "phone": "+639178630010",
- "emails": [
-  "theadavenport@homeworthrealtycorp.com",
-  "madoloresng@homeworthrealtycorp.com"
- ],
- "address": "Quezon City, Philippines",
- "objectives": [
-  "We prioritize exceptional service over mere business transactions.",
-  "We support and empower clients beyond just earning a living.",
-  "We are committed to elevating the Filipino lifestyle, equipping it for the modern, fast-paced corporate world—because your success is our success."
- ],
- "business": [
-  "Engage globally in trading and leasing condominium units, houses, lots, lands, and residential or commercial properties.",
-  "Operate, hold, or manage real estate acquired through purchase, lease, donation, or other means.",
-  "Acquire, improve, develop, subdivide, sell, mortgage, exchange, lease, or invest in all kinds of real estate, including buildings, houses, apartments, townhouses, condominiums, and related structures.",
-  "Purchase, acquire, own, lease, or sell any property necessary for our corporate operations.",
-  "Invest in other companies and form joint ventures with domestic or foreign companies, partnerships, persons, or government entities."
- ],
- "story": [
-  "Homeworth Realty Corp is a company incorporated by a family-oriented group of friends. It is a plan executed, an action performed, and a picture come to life.",
-  "Our friendship started as early as 1991. And our real estate job in 1998 became our forte, which eventually turned out to be our passion. It is a job that we cannot leave—but live. As long as the need for shelter and business addresses continuously arises… And so, it means forever."
- ]
+  "name": "Homeworth Realty Corp.",
+  "tagline": "Afford a home\nassured of its worth.",
+  "heroImage": "photos/Cover-Photo(fabian-kuhne-zVwBT5i2SoE-unsplash).jpg",
+  "logo": "logo.svg",
+  "phone": "+639178630010",
+  "emails": [
+    "theadavenport@homeworthrealtycorp.com",
+    "madoloresng@homeworthrealtycorp.com"
+  ],
+  "address": "Quezon City, Philippines",
+  "objectives": [
+    "We prioritize exceptional service over mere business transactions.",
+    "We support and empower clients beyond just earning a living.",
+    "We are committed to elevating the Filipino lifestyle, equipping it for the modern, fast-paced corporate world—because your success is our success."
+  ],
+  "business": [
+    "Engage globally in trading and leasing condominium units, houses, lots, lands, and residential or commercial properties.",
+    "Operate, hold, or manage real estate acquired through purchase, lease, donation, or other means.",
+    "Acquire, improve, develop, subdivide, sell, mortgage, exchange, lease, or invest in all kinds of real estate, including buildings, houses, apartments, townhouses, condominiums, and related structures.",
+    "Purchase, acquire, own, lease, or sell any property necessary for our corporate operations.",
+    "Invest in other companies and form joint ventures with domestic or foreign companies, partnerships, persons, or government entities."
+  ],
+  "story": [
+    "Homeworth Realty Corp is a company incorporated by a family-oriented group of friends. It is a plan executed, an action performed, and a picture come to life.",
+    "Our friendship started as early as 1991. And our real estate job in 1998 became our forte, which eventually turned out to be our passion. It is a job that we cannot leave—but live. As long as the need for shelter and business addresses continuously arises… And so, it means forever."
+  ]
 }
