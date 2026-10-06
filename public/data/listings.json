@@ -582,11 +582,19 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/254-muwofghf-0.jpg",
+      "photos/254-muwofghf-1.jpg",
+      "photos/254-muwofghf-2.jpg",
+      "photos/254-muwofghf-3.jpg",
+      "photos/254-muwofghf-4.jpg",
+      "photos/254-muwofghf-5.jpg",
+      "photos/254-muwofghf-6.jpg"
+    ],
     "availableFrom": "2026-03-05",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-06T12:50:28.444Z",
     "pk": 254,
     "leasePrice": 18000,
     "floorArea": 36,
