@@ -741,11 +741,20 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/249-muwnhvec-0.jpg",
+      "photos/249-muwnhvec-1.jpg",
+      "photos/249-muwnhvec-2.jpg",
+      "photos/249-muwnhvec-3.jpg",
+      "photos/249-muwnhvec-4.jpg",
+      "photos/249-muwnhvec-5.jpg",
+      "photos/249-muwnhvec-6.jpg",
+      "photos/249-muwnhvec-7.jpg"
+    ],
     "availableFrom": "2025-12-27",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-06T12:24:21.320Z",
     "pk": 249,
     "leasePrice": 25000,
     "floorArea": 36,
