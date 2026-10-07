@@ -70,7 +70,7 @@ td input[type=checkbox]{width:22px;min-height:22px}.dim{color:var(--muted);backg
 .top{position:fixed;inset:0 0 auto 0;z-index:8;padding:calc(1rem + var(--st)) calc(1.25rem + var(--sr)) 1rem calc(1.25rem + var(--sl));transition:background .3s,padding .3s}
 .top.solid{background:rgba(0,0,0,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-top:calc(.55rem + var(--st));padding-bottom:.55rem}
 .top nav{display:flex;gap:1.6rem;align-items:center;max-width:1320px;margin:0 auto}
-.top img{height:40px;margin-right:auto;transition:height .3s}.top.solid img{height:30px}
+.top img{height:4.5rem;width:auto;margin-right:auto;transition:height .3s}.top.solid img{height:3rem}
 .top a{color:#fff;text-decoration:none;font-weight:500;padding:.5rem 0}.top .pill{border:1px solid rgba(255,255,255,.6);border-radius:99px;padding:.45rem 1.1rem}
 .hero{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;color:#fff;background:var(--deep);--p:0}
 .hero-bg{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;will-change:transform;transform:translate3d(0,calc(var(--p)*14%),0) scale(calc(1.06 + var(--p)*.1))}
@@ -79,7 +79,7 @@ td input[type=checkbox]{width:22px;min-height:22px}.dim{color:var(--muted);backg
 .eyebrow{font:600 .78rem var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin:0 0 1.6rem;opacity:0;animation:fade 1s .1s forwards}
 .eyebrow.dark{color:var(--teal);opacity:1;animation:none;margin-bottom:.8rem}
 .w{display:inline-block;overflow:hidden;vertical-align:top;padding:.04em .02em .16em;margin:-.04em -.02em -.16em}
-.w>span{display:inline-block;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.8s + var(--i)*.1s)}.w>.gold{color:#bdbdbd;font-style:italic;padding-right:.06em}
+.w>span{display:inline-block;transform:translateY(110%);animation:rise 1s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(.8s + var(--i)*.1s)}.w>.gold{color:#fff;font-style:italic;padding-right:.06em}
 .cta{margin-top:2.4rem;display:inline-flex;gap:.7rem;align-items:center;color:#fff;text-decoration:none;font-weight:600;border-bottom:1px solid var(--gold);padding:.7rem 0;opacity:0;animation:fade 1s 2s forwards}
 .cta span{transition:transform .2s}.cta:hover span{transform:translateY(4px)}
 main{position:relative;z-index:2;background:var(--paper);border-radius:28px 28px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.35)}
@@ -145,7 +145,6 @@ html{background:#fff}
 .hero .cta,.top:not(.solid) a{text-shadow:0 1px 3px rgba(0,0,0,.65),0 4px 22px rgba(0,0,0,.55)}
 /* scroll cue: tiny vertical label + hairline with a falling dot, bottom right, visible on phones too */
 .cue{position:absolute;right:calc(1.1rem + var(--sr));bottom:calc(1.4rem + var(--sb));z-index:2;display:flex;flex-direction:column;align-items:center;gap:.8rem;padding:.5rem .6rem;color:#fff;text-decoration:none;font:600 .66rem var(--body);letter-spacing:.32em;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,.7);opacity:calc(1 - var(--p)*4)}
-.cue span{writing-mode:vertical-rl}
 .cue i{position:relative;display:block;width:1px;height:58px;background:rgba(255,255,255,.4);overflow:hidden;box-shadow:0 0 6px rgba(0,0,0,.35)}
 .cue i::after{content:'';position:absolute;left:0;top:0;width:1px;height:20px;background:#fff;animation:drip 2.4s cubic-bezier(.6,0,.25,1) infinite}
 @keyframes drip{from{transform:translateY(-100%)}to{transform:translateY(60px)}}
@@ -154,7 +153,7 @@ html{background:#fff}
 .foot h2,.foot h3,.foot p,.foot a{font-size:1rem}
 .foot-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:50% 50%}
 .foot-brand{display:grid;gap:2rem;align-content:start}
-.foot-logo{width:100%;height:auto;filter:invert(1)}
+.foot-logo{width:50%;height:auto;filter:invert(1)}
 .foot-story{display:grid;gap:1.4rem}.foot-story p{margin:0;line-height:1.65;color:var(--muted);max-width:56ch}
 .foot-contact{display:flex;flex-direction:column;justify-content:space-between;gap:3rem;padding-left:clamp(2rem,5vw,4.5rem)}
 .foot-contact h2{margin:0 0 1.4rem;line-height:1.2}.foot-contact h3{margin:1.6rem 0 .4rem}.foot-contact p{margin:.2rem 0 .6rem}

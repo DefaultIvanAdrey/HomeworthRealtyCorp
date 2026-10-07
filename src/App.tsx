@@ -111,7 +111,7 @@ function Site() {
         <h1 aria-label={site.tagline.replace('\n', ' ')}>{lines.map((line, li) => <span key={li} className="ln">{line.split(' ').map((w, i, a) => { const last = li === lines.length - 1 && i === a.length - 1; const word = <span aria-hidden className="w" style={{ '--i': offs[li] + i } as React.CSSProperties}><span className={last ? 'gold' : ''}>{w}</span></span>; return <Fragment key={i}>{word}{i < a.length - 1 ? ' ' : ''}</Fragment> })}</span>)}</h1>
         <a className="cta" href="#find">{all && all.length ? `Explore ${all.length} homes` : 'Explore homes'} <span aria-hidden>↓</span></a>
       </div>
-      <a className="cue" href="#find" aria-label="Scroll down to the listings"><span>Scroll</span><i aria-hidden /></a>
+      <a className="cue" href="#find" aria-label="Scroll down to the listings"><i aria-hidden /></a>
     </header>
 
     <main>
