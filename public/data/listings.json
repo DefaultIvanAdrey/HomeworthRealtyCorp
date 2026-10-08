@@ -28,13 +28,14 @@
     "availableFrom": "2026-09-17",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-08T17:16:39.354Z",
     "pk": 270,
     "salePrice": 95000000,
     "floorArea": 239,
     "bedrooms": 5,
     "bathrooms": 3,
-    "parking": 2
+    "parking": 2,
+    "leasePrice": 250000
   },
   {
     "id": "269",
