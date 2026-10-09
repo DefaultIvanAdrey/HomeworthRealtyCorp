@@ -351,11 +351,18 @@
       "Sofa Set"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/261-mv0f9f10-0.jpg",
+      "photos/261-mv0f9f10-1.jpg",
+      "photos/261-mv0f9f10-2.jpg",
+      "photos/261-mv0f9f10-3.jpg",
+      "photos/261-mv0f9f10-4.jpg",
+      "photos/261-mv0f9f10-5.jpg"
+    ],
     "availableFrom": "2026-04-13",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T03:44:54.393Z",
     "pk": 261,
     "salePrice": 6000000,
     "leasePrice": 25000,
