@@ -274,11 +274,18 @@
       "Lobby/Reception"
     ],
     "remarks": "**Longterm Parking Fee:** ₱8,000/mo\n**Longterm Rental w/ Carpark:** ₱35,000/mo",
-    "photos": [],
+    "photos": [
+      "photos/263-mv0fgoa5-0.jpg",
+      "photos/263-mv0fgoa5-1.jpg",
+      "photos/263-mv0fgoa5-2.jpg",
+      "photos/263-mv0fgoa5-3.jpg",
+      "photos/263-mv0fgoa5-4.jpg",
+      "photos/263-mv0fgoa5-5.jpg"
+    ],
     "availableFrom": "2026-05-03",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T03:50:33.366Z",
     "pk": 263,
     "salePrice": 8000000,
     "monthlyRent": 27000,
