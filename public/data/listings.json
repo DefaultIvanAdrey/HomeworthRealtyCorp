@@ -24,11 +24,17 @@
       "Swimming Pool"
     ],
     "remarks": "• 1 Maids-room\n• 1 Powder Room",
-    "photos": [],
+    "photos": [
+      "photos/270-mv0g7r0k-0.jpg",
+      "photos/270-mv0g7r0k-1.jpg",
+      "photos/270-mv0g7r0k-2.jpg",
+      "photos/270-mv0g7r0k-3.jpg",
+      "photos/270-mv0g7r0k-4.jpg"
+    ],
     "availableFrom": "2026-09-17",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-08T17:16:39.354Z",
+    "updatedAt": "2026-10-09T04:11:37.163Z",
     "pk": 270,
     "salePrice": 95000000,
     "floorArea": 239,
