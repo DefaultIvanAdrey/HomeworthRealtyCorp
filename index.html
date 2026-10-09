@@ -6,5 +6,5 @@
 <title>Homeworth Realty Corp.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-<script>addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='SCRIPT'){var r=document.getElementById('root');if(!sessionStorage.getItem('hw-r')){sessionStorage.setItem('hw-r','1');location.reload()}else if(r)r.innerHTML='<p style="padding:2rem;font-family:system-ui">The site is updating. Please refresh in a minute.</p>'}},true)</script>
+<script>addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='SCRIPT'&&/assets\//.test(t.src||'')){var r=document.getElementById('root'),k='hw-r',n=+sessionStorage.getItem(k)||0;if(Date.now()-n>60000){sessionStorage.setItem(k,Date.now());location.reload()}else if(r)r.innerHTML='<p style="padding:2rem;font-family:system-ui">The site is updating. Please refresh in a minute.</p>'}},true)</script>
 </head><body><div id="root"><p style="padding:2rem;font-family:system-ui">Loading…</p></div><script type="module" src="/src/main.tsx"></script></body></html>
