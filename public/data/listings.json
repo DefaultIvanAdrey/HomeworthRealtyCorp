@@ -201,11 +201,17 @@
       "Sofa Set"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/265-mv0c8u17-0.jpg",
+      "photos/265-mv0c8u17-1.jpg",
+      "photos/265-mv0c8u17-2.jpg",
+      "photos/265-mv0c8u17-3.jpg",
+      "photos/265-mv0c8u17-4.jpg"
+    ],
     "availableFrom": "2026-03-02",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T02:20:22.520Z",
     "pk": 265,
     "salePrice": 6500000,
     "floorArea": 43,
