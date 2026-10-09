@@ -458,11 +458,17 @@
       "WiFi"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/259-mv0foe6w-0.jpg",
+      "photos/259-mv0foe6w-1.jpg",
+      "photos/259-mv0foe6w-2.jpg",
+      "photos/259-mv0foe6w-3.jpg",
+      "photos/259-mv0foe6w-4.jpg"
+    ],
     "availableFrom": "2026-05-05",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T03:56:33.632Z",
     "pk": 259,
     "leasePrice": 20000,
     "floorArea": 30,
