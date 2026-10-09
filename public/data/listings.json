@@ -380,11 +380,18 @@
       "Lobby/Reception"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/260-mv0f7mc4-0.jpg",
+      "photos/260-mv0f7mc4-1.jpg",
+      "photos/260-mv0f7mc4-2.jpg",
+      "photos/260-mv0f7mc4-3.jpg",
+      "photos/260-mv0f7mc4-4.jpg",
+      "photos/260-mv0f7mc4-5.jpg"
+    ],
     "availableFrom": "2026-04-05",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T03:43:30.992Z",
     "pk": 260,
     "salePrice": 5000000,
     "leasePrice": 20000,
