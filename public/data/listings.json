@@ -58,11 +58,15 @@
       "Swimming Pool"
     ],
     "remarks": "• With Balcony",
-    "photos": [],
+    "photos": [
+      "photos/269-mv0g5uhp-0.jpg",
+      "photos/269-mv0g5uhp-1.jpg",
+      "photos/269-mv0g5uhp-2.jpg"
+    ],
     "availableFrom": "2026-09-09",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T04:10:07.825Z",
     "pk": 269,
     "salePrice": 12800000,
     "monthlyRent": 33000,
