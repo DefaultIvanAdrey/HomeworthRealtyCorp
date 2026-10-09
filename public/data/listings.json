@@ -1205,11 +1205,16 @@
       "Swimming Pool"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/273-mv0m0a1a-0.jpg",
+      "photos/273-mv0m0a1a-1.jpg",
+      "photos/273-mv0m0a1a-2.jpg",
+      "photos/273-mv0m0a1a-3.jpg"
+    ],
     "availableFrom": "2026-10-08",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-09T06:52:32.816Z",
+    "updatedAt": "2026-10-09T06:53:12.369Z",
     "pk": 273,
     "salePrice": 4500000,
     "floorArea": 30,
@@ -1237,11 +1242,18 @@
       "WiFi"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/272-mv0m0a1a-0.jpg",
+      "photos/272-mv0m0a1a-1.jpg",
+      "photos/272-mv0m0a1a-2.jpg",
+      "photos/272-mv0m0a1a-3.jpg",
+      "photos/272-mv0m0a1a-4.jpg",
+      "photos/272-mv0m0a1a-5.jpg"
+    ],
     "availableFrom": "2026-10-03",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-09T06:52:32.816Z",
+    "updatedAt": "2026-10-09T06:53:44.755Z",
     "pk": 272,
     "leasePrice": 16000,
     "floorArea": 30,
