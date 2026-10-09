@@ -98,11 +98,20 @@
       "Swimming Pool"
     ],
     "remarks": "• With Balcony\n• 1 Tandem Parking at Basement 1",
-    "photos": [],
+    "photos": [
+      "photos/268-mv0g1dia-0.jpg",
+      "photos/268-mv0g1dia-1.jpg",
+      "photos/268-mv0g1dia-2.jpg",
+      "photos/268-mv0g1dia-3.jpg",
+      "photos/268-mv0g1dia-4.jpg",
+      "photos/268-mv0g1dia-5.jpg",
+      "photos/268-mv0g1dia-6.jpg",
+      "photos/268-mv0g1dia-7.jpg"
+    ],
     "availableFrom": "2026-09-09",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-05T14:43:44.781Z",
+    "updatedAt": "2026-10-09T04:06:37.434Z",
     "pk": 268,
     "salePrice": 19000000,
     "monthlyRent": 45000,
