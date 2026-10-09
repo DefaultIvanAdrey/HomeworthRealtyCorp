@@ -1285,11 +1285,17 @@
       "WiFi"
     ],
     "remarks": "",
-    "photos": [],
+    "photos": [
+      "photos/271-mv0m4enh-0.jpg",
+      "photos/271-mv0m4enh-1.jpg",
+      "photos/271-mv0m4enh-2.jpg",
+      "photos/271-mv0m4enh-3.jpg",
+      "photos/271-mv0m4enh-4.jpg"
+    ],
     "availableFrom": "2026-09-28",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-09T06:52:32.816Z",
+    "updatedAt": "2026-10-09T06:56:58.463Z",
     "pk": 271,
     "leasePrice": 25000,
     "floorArea": 28,
