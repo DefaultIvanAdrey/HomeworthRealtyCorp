@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx'
+import Papa from 'papaparse'
 import { blank, type Listing } from './types'
 import { fixText, slug, sortedUnique } from './format'
 
@@ -8,7 +9,9 @@ const num = (v: unknown) => { const n = typeof v === 'number' ? v : parseFloat(s
 const iso = (v: unknown) => {
   if (typeof v === 'number' && v > 20000) return new Date(Math.round((v - 25569) * 864e5)).toISOString().slice(0, 10) // Excel serial → date, no timezone drift
   const t = s(v); const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/) ?? t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/)
-  return !m ? '' : m[1].length === 4 ? `${m[1]}-${m[2]}-${m[3]}` : `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`
+  if (m) return m[1].length === 4 ? `${m[1]}-${m[2]}-${m[3]}` : `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`
+  const d = new Date(t)   // e.g. "Sep 17, 2026" as copied from a sheet
+  return t && !isNaN(+d) ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}` : ''
 }
 
 /** Reads the Homeworth workbook (.xlsx) or a CSV export. Finds the header row itself. */
@@ -20,6 +23,21 @@ export async function parseListingsFile(file: File): Promise<ParsedRow[]> {
     if (h >= 0) return build(rows, h)
   }
   throw new Error('No listings sheet found. The file needs a header row with "Category" and "Property Subtype".')
+}
+
+// Column order of the "New" sheet, used when a copied row has no header line.
+const HEADERS = ['disctinction / project name', 'description', 'webpage', 'primary key', 'availability date', 'latest transaction', 'category', 'property subtype', 'availability', 'condition', 'sale value', 'monthly rent value', 'lease value', 'negotiable', 'unit/house number & tower', 'street / village / barangay / project', 'district / project', 'municipality', 'lot area', 'floor area', 'bedroom', 'bathroom', 'parking', 'storey', 'amenities', 'remarks', 'photos']
+
+/** Reads one row (or header + row) copied from the spreadsheet and pasted as text: tab-separated, multi-line cells in quotes. */
+export function parsePastedRow(text: string): ParsedRow {
+  const fail = () => new Error('Could not read that. In your sheet, select the whole row starting from the first column, copy it, and paste it here.')
+  const rows = Papa.parse<string[]>(text.replace(/\r\n/g, '\n'), { delimiter: '\t', skipEmptyLines: 'greedy' }).data
+  if (!rows.length) throw fail()
+  const header = rows[0].some(c => c.trim() === 'Category') && rows[0].some(c => c.trim() === 'Property Subtype')
+  if (!header && rows[0].length < 8) throw fail()
+  const out = build(header ? rows : [HEADERS, ...rows], 0)
+  if (!out.length) throw fail()
+  return out[0]
 }
 
 function build(rows: unknown[][], h: number): ParsedRow[] {

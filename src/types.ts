@@ -7,7 +7,7 @@ export interface Listing {
   availableFrom: string; latestTransaction: string; published: boolean; updatedAt: string
 }
 export interface SiteConfig {
-  name: string; tagline: string; heroImage: string; logo: string; phone: string; emails: string[]; address: string
+  name: string; tagline: string; heroImage: string; logo: string; phone: string; emails?: string[]; contacts?: { email: string; role: string; show: boolean }[]; credit?: { text: string; email: string }; address: string
   objectives: string[]; business: string[]; story: string[]
 }
 export const blank = (): Listing => ({ id: '', title: '', category: 'Condominium', subtype: '', availability: 'For Sale Only', condition: '', negotiable: false, unit: '', street: '', district: '', municipality: '', amenities: [], remarks: '', photos: [], availableFrom: '', latestTransaction: '', published: true, updatedAt: '' })

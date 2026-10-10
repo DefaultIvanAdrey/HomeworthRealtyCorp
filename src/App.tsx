@@ -13,6 +13,11 @@ export default function App() {
   return hash.startsWith('#/admin') ? <Suspense fallback={null}><Admin /></Suspense> : <Site />
 }
 
+const mailto = (to: string, o: { cc?: string[]; bcc?: string[]; subject?: string } = {}) => {
+  const q = [o.cc?.length && `cc=${o.cc.join(',')}`, o.bcc?.length && `bcc=${o.bcc.join(',')}`, o.subject && `subject=${encodeURIComponent(o.subject)}`].filter(Boolean).join('&')
+  return `mailto:${to}${q ? '?' + q : ''}`
+}
+
 const Price = ({ l }: { l: Listing }) => { const p = topPrice(l); return <p className="price">{p ? money(p.value) : 'Price on request'}{p && <small> {KIND_LABEL[p.kind]}{l.negotiable ? ' · negotiable' : ''}</small>}</p> }
 const Fact = ({ v, l }: { v?: number | string; l: string }) => (v ? <span><b>{v}</b> {l}</span> : null)
 
@@ -22,6 +27,11 @@ function Site() {
   const [err, setErr] = useState('')
   const [open, setOpen] = useState<Listing | null>(null)
   const [box, setBox] = useState<{ l: Listing; i: number } | null>(null)
+  const [leaving, setLeaving] = useState(false)
+  const [toast, setToast] = useState('')
+  const openRef = useRef<Listing | null>(null)
+  const instantRef = useRef(false)
+  openRef.current = open
   const [gallery, setGallery] = useState<string[]>([])
   const [f, setF] = useState(NOFILTER)
   const heroRef = useRef<HTMLElement>(null)
@@ -31,14 +41,35 @@ function Site() {
   const drag = useRef<{ y: number; t: number; dy: number } | null>(null)
 
   // Back button / swipe-back closes the popup instead of leaving the site: opening pushes a history entry, closing pops it.
-  const openSheet = (l: Listing) => { history.pushState({ hwSheet: 1 }, ''); setOpen(l) }
+  const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches
+  const linkTo = (l: Listing) => `${location.origin}${location.pathname}#/l/${encodeURIComponent(l.id)}`
+  // Opening adds a history entry and the shareable #/l/<id> address; closing removes it, so Back closes the popup.
+  const openSheet = (l: Listing) => { history.pushState({ hwSheet: 1 }, '', `#/l/${encodeURIComponent(l.id)}`); setOpen(l) }
   const openBox = (l: Listing, i: number) => { history.pushState({ hwSheet: 1, hwBox: 1 }, ''); setBox({ l, i }) }
-  const closeSheet = () => (history.state?.hwSheet ? history.back() : setOpen(null))
+  // fast, subtle exit: the popup fades and sinks for 170ms before it unmounts
+  const dismiss = (instant = false) => { if (instant || reduced()) { setOpen(null); setLeaving(false); return } setLeaving(true); setTimeout(() => { setOpen(null); setLeaving(false) }, 170) }
+  const closeSheet = (instant = false) => {
+    if (history.state?.hwSheet) { instantRef.current = instant; history.back() }
+    else { dismiss(instant); if (location.hash.startsWith('#/l/')) history.replaceState(null, '', location.pathname + location.search) }
+  }
   const closeBox = () => (history.state?.hwBox ? history.back() : setBox(null))
   useEffect(() => {
-    const pop = () => { const st = history.state || {}; if (!st.hwBox) setBox(null); if (!st.hwSheet) setOpen(null) }
+    const pop = () => { const st = history.state || {}; if (!st.hwBox) setBox(null); if (!st.hwSheet && openRef.current) { dismiss(instantRef.current); instantRef.current = false } }
     addEventListener('popstate', pop); return () => removeEventListener('popstate', pop)
   }, [])
+  // Deep links: a #/l/<id> address opens that listing
+  useEffect(() => {
+    const go = () => { const m = location.hash.match(/^#\/l\/(.+)$/); const l = m && all?.find(x => x.id === decodeURIComponent(m[1])); if (l) setOpen(l) }
+    go(); addEventListener('hashchange', go); return () => removeEventListener('hashchange', go)
+  }, [all])
+  const share = async (l: Listing) => {
+    const url = linkTo(l); let ok = false
+    try { await navigator.clipboard.writeText(url); ok = true } catch {
+      const t = document.createElement('textarea'); t.value = url; t.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(t); t.select()
+      try { ok = document.execCommand('copy') } catch { ok = false } t.remove()
+    }
+    setToast(ok ? 'Link copied' : `Copy this link: ${url}`); setTimeout(() => setToast(''), ok ? 2200 : 8000)
+  }
 
   // Drag the handle down to dismiss the popup (phones).
   const dragStart = (e: React.PointerEvent<HTMLDivElement>) => { e.currentTarget.setPointerCapture?.(e.pointerId); drag.current = { y: e.clientY, t: performance.now(), dy: 0 }; if (sheetRef.current) sheetRef.current.style.transition = 'none' }
@@ -46,7 +77,7 @@ function Site() {
   const dragEnd = () => {
     const d = drag.current; const el = sheetRef.current; drag.current = null; if (!d || !el) return
     el.style.transition = 'transform .25s cubic-bezier(.2,.8,.2,1)'
-    if (d.dy > 110 || (d.dy > 30 && d.dy / Math.max(1, performance.now() - d.t) > 0.6)) { el.style.transform = 'translateY(100%)'; setTimeout(closeSheet, 220) } else el.style.transform = ''
+    if (d.dy > 110 || (d.dy > 30 && d.dy / Math.max(1, performance.now() - d.t) > 0.6)) { el.style.transform = 'translateY(100%)'; setTimeout(() => closeSheet(true), 220) } else el.style.transform = ''
   }
 
   // Parallax: one rAF-throttled scroll listener drives a single CSS variable (--p, 0 to 1) that the hero reads.
@@ -97,6 +128,10 @@ function Site() {
 
   if (err) return <p style={{ padding: '2rem', font: '1rem system-ui' }}>The site could not load its settings ({err}). Check that the <code>public/data</code> folder is in your repository, then redeploy.</p>
   if (!site) return null
+  const contacts = site.contacts ?? (site.emails ?? []).map(email => ({ email, role: '', show: true }))
+  const team = contacts.filter(c => c.role === 'Property Consultant'); const staff = team.length ? team : contacts.filter(c => c.show)
+  const bcc = contacts.filter(c => !staff.includes(c)).map(c => c.email)
+  const credit = site.credit ?? { text: 'Website made by Ivan Adrey.', email: 'ivanadrey@proton.me' }
   const lines = site.tagline.split('\n')
   const offs = lines.map((_, li) => lines.slice(0, li).reduce((t, l) => t + l.split(' ').length, 0))
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => setF({ ...f, [k]: e.target.value })
@@ -136,6 +171,7 @@ function Site() {
           <p className="empty">{all.length ? 'No listings match those filters. Try widening the price or clearing a filter.' : 'No listings are published yet.'}</p>
         ) : <div className="grid">{shown.map((l, n) => (
           <div key={l.id} className="card rv" style={{ '--d': `${(n % 3) * 0.09}s` } as React.CSSProperties} role="button" tabIndex={0} aria-label={l.title} onClick={() => openSheet(l)} onKeyDown={e => e.key === 'Enter' && openSheet(l)}>
+            <button className="share-i" aria-label={`Copy link to ${l.title}`} onClick={e => { e.stopPropagation(); share(l) }} onKeyDown={e => e.stopPropagation()}><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 15V3M7 8l5-5 5 5" /></svg></button>
             {l.photos.length ? <Carousel photos={l.photos} alt={l.title} /> : <div className="thumb"><span>{l.subtype || l.category}</span></div>}
             <div className="body">
               <Price l={l} />
@@ -169,16 +205,16 @@ function Site() {
             <h3>Address</h3><p>{site.address}</p>
             <h3>Contacts</h3>
             <p><a href={`tel:${site.phone}`}>{site.phone}</a></p>
-            {site.emails.map(m => <p key={m}><a href={`mailto:${m}`}>{m}</a></p>)}
+            {contacts.filter(c => c.show).map(c => <p key={c.email}><a href={mailto(c.email, { cc: contacts.filter(x => x.email !== c.email).map(x => x.email) })}>{c.email}</a></p>)}
           </div>
-          <p className="copy">© {new Date().getFullYear()} {site.name}</p>
+          <p className="copy"><span>© {new Date().getFullYear()} {site.name}</span><a className="credit" href={mailto(credit.email)}>{credit.text}</a></p>
         </div>
       </div>
     </footer>
 
-    {open && <div className="scrim" onClick={closeSheet}><article className="sheet" ref={sheetRef} role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
+    {open && <div className={leaving ? 'scrim out' : 'scrim'} onClick={() => closeSheet()}><article className={leaving ? 'sheet out' : 'sheet'} ref={sheetRef} role="dialog" aria-modal="true" aria-label={open.title} onClick={e => e.stopPropagation()}>
       <div className="grab" aria-hidden onPointerDown={dragStart} onPointerMove={dragMove} onPointerUp={dragEnd} onPointerCancel={dragEnd} />
-      <button className="close" onClick={closeSheet} aria-label="Close">×</button>
+      <button className="close" onClick={() => closeSheet()} aria-label="Close">×</button>
       {open.photos.length > 0 && <Carousel photos={open.photos} alt={open.title} onSelect={i => openBox(open, i)} />}
       <div className="pad">
         <Price l={open} />
@@ -188,11 +224,13 @@ function Site() {
         {open.amenities.length > 0 && <p className="tags">{[...open.amenities].sort(collator.compare).map(a => <span key={a}>{a}</span>)}</p>}
         {open.remarks && <p className="remarks">{open.remarks}</p>}
         <div className="actions"><a className="btn" href={`tel:${site.phone}`}>Call us</a>
-          <a className="btn ghost" href={`mailto:${site.emails[0]}?cc=${site.emails.slice(1).join(',')}&subject=${encodeURIComponent('Inquiry: ' + open.title)}`}>Email us</a>
+          <a className="btn ghost" href={mailto(staff[0]?.email ?? '', { cc: staff.slice(1).map(c => c.email), bcc, subject: 'Inquiry: ' + open.title })}>Email us</a>
+          <button className="btn ghost" onClick={() => share(open)}>Share</button>
 </div>
       </div>
     </article></div>}
 
+    {toast && <div className="toast" role="status">{toast}</div>}
     {box && <div className="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer"><button className="close" onClick={closeBox} aria-label="Close photo viewer">×</button><Carousel photos={box.l.photos} alt={box.l.title} start={box.i} contain /></div>}
   </>)
 }
