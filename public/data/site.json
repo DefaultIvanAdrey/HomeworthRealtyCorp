@@ -4,9 +4,12 @@
   "heroImage": "hero.jpg",
   "logo": "logo.svg",
   "phone": "+639178630010",
-  "emails": [
-    "theadavenport@homeworthrealtycorp.com",
-    "madoloresng@homeworthrealtycorp.com"
+"contacts": [
+  { "email": "theadavenport@homeworthrealtycorp.com", "role": "Property Consultant", "show": true },
+  { "email": "madoloresng@homeworthrealtycorp.com", "role": "Property Consultant", "show": true },
+  { "email": "ivanadrey@proton.me", "role": "Web Developer", "show": false }
+],
+"credit": { "text": "Website made by Ivan Adrey.", "email": "ivanadrey@proton.me" },
   ],
   "address": "Quezon City, Philippines",
   "objectives": [
