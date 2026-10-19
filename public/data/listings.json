@@ -1,5 +1,47 @@
 [
   {
+    "id": "274",
+    "title": "Stamford 3 Executive Residences [STU] (Unit 2A)",
+    "category": "Condominium",
+    "subtype": "Studio",
+    "availability": "For Lease & For Sale",
+    "condition": "Fully Furnished",
+    "negotiable": true,
+    "unit": "Unit 2A, Stamford 3",
+    "street": "Executive Residences",
+    "district": "McKinley Hill",
+    "municipality": "Taguig",
+    "amenities": [
+      "24/7 Security Monitoring",
+      "Changing Rooms",
+      "Gym",
+      "Landscaped Garden",
+      "Mailbox",
+      "Retail Arcade",
+      "Swimming Pool",
+      "WiFi"
+    ],
+    "remarks": "",
+    "photos": [
+      "photos/274-mvfduuv6-0.jpg",
+      "photos/274-mvfduuv6-1.jpg",
+      "photos/274-mvfduuv6-2.jpg",
+      "photos/274-mvfduuv6-3.jpg",
+      "photos/274-mvfduuv6-4.jpg",
+      "photos/274-mvfduuv6-5.jpg",
+      "photos/274-mvfduuv6-6.jpg"
+    ],
+    "availableFrom": "2026-10-09",
+    "latestTransaction": "",
+    "published": true,
+    "updatedAt": "2026-10-19T15:02:07.663Z",
+    "pk": 274,
+    "salePrice": 5500000,
+    "leasePrice": 25000,
+    "floorArea": 25,
+    "bathrooms": 1
+  },
+  {
     "id": "270",
     "title": "Uptown Ritz BGC [5BR Penthouse] (Unit 45 EF)",
     "category": "Penthouse",
