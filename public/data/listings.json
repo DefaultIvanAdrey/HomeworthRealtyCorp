@@ -120,7 +120,7 @@
     "title": "Stamford 3 Executive Residences [STU] (Unit 2A)",
     "category": "Condominium",
     "subtype": "Studio",
-    "availability": "For Lease & For Sale",
+    "availability": "For Rent & For Sale",
     "condition": "Fully Furnished",
     "negotiable": true,
     "unit": "Unit 2A, Stamford 3",
@@ -150,12 +150,12 @@
     "availableFrom": "2026-10-09",
     "latestTransaction": "",
     "published": true,
-    "updatedAt": "2026-10-19T15:02:07.663Z",
+    "updatedAt": "2026-10-20T13:25:08.981Z",
     "pk": 274,
     "salePrice": 5500000,
-    "leasePrice": 25000,
     "floorArea": 25,
-    "bathrooms": 1
+    "bathrooms": 1,
+    "monthlyRent": 25000
   },
   {
     "id": "270",
