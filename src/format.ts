@@ -1,4 +1,5 @@
 import type { Listing } from './types'
+import { CATEGORY, CONDITION, F_AVAILABILITY, SUBTYPE } from './options'
 const php = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP', maximumFractionDigits: 0 })
 export const money = (n?: number) => (n ? php.format(n) : '')
 export const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
@@ -11,6 +12,12 @@ export function fixText(s: string) {
   try { return decodeURIComponent(escape(s.replace(/[€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ]/g, c => CP1252[c]))) } catch { return s }
 }
 export const cleanListing = (l: Listing): Listing => ({ ...l, title: fixText(l.title), unit: fixText(l.unit), street: fixText(l.street), district: fixText(l.district), municipality: fixText(l.municipality), remarks: fixText(l.remarks), amenities: l.amenities.map(fixText) })
+export const listingText = (l: Listing) => [l.title, l.unit, l.street, l.district, l.municipality, l.category, l.subtype, l.availability, l.condition, l.amenities.join(' '), l.remarks].join(' ').toLowerCase()
+/** Dropdown choices that actually exist in the data, ordered like the spreadsheet's own dropdowns. */
+export function filterOptions(L: Listing[]) {
+  const uniq = (g: (l: Listing) => string, order: string[] = []) => { const s = new Set(L.map(g).filter(Boolean)); return [...order.filter(o => s.has(o)), ...[...s].filter(o => !order.includes(o)).sort((a, b) => a.localeCompare(b))] }
+  return { avail: F_AVAILABILITY.filter(w => L.some(l => l.availability.toLowerCase().includes(w.toLowerCase()))), cat: uniq(l => l.category, CATEGORY), sub: uniq(l => l.subtype, SUBTYPE), cond: uniq(l => l.condition, CONDITION), town: uniq(l => l.municipality) }
+}
 export const collator = new Intl.Collator('en', { sensitivity: 'base' })
 export const sortedUnique = (a: string[]) => [...new Set(a.map(x => x.trim()).filter(Boolean))].sort(collator.compare)
 

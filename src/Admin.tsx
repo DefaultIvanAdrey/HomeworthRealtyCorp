@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { blank, type Listing } from './types'
-import { cleanListing, KIND_LABEL, money, slug, sortedUnique, topPrice, where } from './format'
+import { cleanListing, collator, filterOptions, KIND_LABEL, listingText, money, recent, slug, sortedUnique, topPrice, where } from './format'
 import { AVAILABILITY, CATEGORY, CONDITION, SUBTYPE } from './options'
 import { mergeListings, parseListingsFile, parsePastedRow, type ParsedRow } from './import'
 import { commit, pull, type FileOut, type GhCfg } from './github'
@@ -15,6 +15,8 @@ async function toJpeg(file: Blob) {
   c.getContext('2d')!.drawImage(b, 0, 0, c.width, c.height); return c.toDataURL('image/jpeg', 0.82)
 }
 
+const AF0 = { avail: '', cat: '', sub: '', cond: '', town: '', vis: '', sort: 'recent' }
+
 export default function Admin() {
   const [cfg, setCfg] = useState<GhCfg>(() => JSON.parse(localStorage.getItem('hw-gh') || '{"owner":"","repo":"","branch":"main"}'))
   const [token, setToken] = useState(sessionStorage.getItem('hw-token') || '')
@@ -25,6 +27,9 @@ export default function Admin() {
   const [preview, setPreview] = useState<ParsedRow[] | null>(null)
   const [q, setQ] = useState('')
   const [busy, setBusy] = useState(false)
+  const [connected, setConnected] = useState(false)
+  const [connecting, setConnecting] = useState(() => !!(sessionStorage.getItem('hw-token') && JSON.parse(localStorage.getItem('hw-gh') || '{}').owner))
+  const [af, setAf] = useState(AF0)
   const [formKey, setFormKey] = useState(0)   // bumped to refresh the uncontrolled textareas after a paste-fill
   const [dnd, setDnd] = useState<{ from: number; over: number; x: number; y: number } | null>(null)
   const figs = useRef<(HTMLElement | null)[]>([])
@@ -32,19 +37,26 @@ export default function Admin() {
   const origin = useRef({ x: 0, y: 0 })
   const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
   const dirty = JSON.stringify(list) !== base
-  const ready = !!(cfg.owner && cfg.repo && token)
+  const ready = connected
   const say = (text: string, ok = true) => setNote({ ok, text })
 
-  const load = async () => {
+  // The GitHub connection is the login: nothing of the manager is shown until the token has been verified against the repository.
+  const connect = async () => {
+    const c = { owner: cfg.owner.trim(), repo: cfg.repo.trim(), branch: cfg.branch.trim() || 'main' }; const t = token.trim()
+    if (!c.owner || !c.repo || !t) { say('Enter the owner, repository and access token.', false); setConnecting(false); return }
+    setConnecting(true); setNote(null)
     try {
-      const d = ready ? await pull(cfg, token) : await (await fetch('data/listings.json?' + Date.now())).json()
-      setList(d.map(cleanListing)); setBase(JSON.stringify(d)); if (ready) say(`Loaded ${d.length} listings from GitHub.`)
-    } catch (e) { say((e as Error).message, false) }
+      const d = await pull(c, t)
+      localStorage.setItem('hw-gh', JSON.stringify(c)); sessionStorage.setItem('hw-token', t); setCfg(c); setToken(t)
+      setList(d.map(cleanListing)); setBase(JSON.stringify(d)); setConnected(true); say(`Connected. Loaded ${d.length} listings from GitHub.`)
+    } catch (e) { sessionStorage.removeItem('hw-token'); say((e as Error).message, false) } finally { setConnecting(false) }
   }
-  useEffect(() => { load() }, []) // eslint-disable-line
+  const disconnect = () => {
+    if (dirty && !confirm('You have unpublished changes. Disconnect and discard them?')) return
+    sessionStorage.removeItem('hw-token'); setToken(''); setConnected(false); setList([]); setBase('[]'); setPreview(null); setNote(null); setTab('listings'); setAf(AF0); setQ('')
+  }
+  useEffect(() => { if (token && cfg.owner && cfg.repo) connect(); else setConnecting(false) }, []) // eslint-disable-line  (re-connects after a refresh in the same tab)
   useEffect(() => { const b = (e: BeforeUnloadEvent) => dirty && e.preventDefault(); addEventListener('beforeunload', b); return () => removeEventListener('beforeunload', b) }, [dirty])
-
-  const connect = () => { localStorage.setItem('hw-gh', JSON.stringify(cfg)); sessionStorage.setItem('hw-token', token); load() }
   const publish = async () => {
     if (list.length === 0 && JSON.parse(base).length > 0 && !confirm('This will publish ZERO listings and remove all current ones from the site. Continue?')) return
     setBusy(true)
@@ -109,31 +121,48 @@ export default function Admin() {
       say(`Filled the form from “${l.title}”.${exists ? ' It matches a listing that is already here, so saving will update it.' : ''} Check the details, add photos, then Save.`)
     } catch (e) { say((e as Error).message, false) }
   }
-  const rows = list.filter(l => (l.title + where(l)).toLowerCase().includes(q.toLowerCase()))
+  const opts = filterOptions(list)
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean)
+  const pv = (l: Listing) => topPrice(l)?.value ?? 0
+  const rows = list.filter(l => words.every(w => listingText(l).includes(w)) && (!af.avail || l.availability.toLowerCase().includes(af.avail.toLowerCase())) && (!af.cat || l.category === af.cat) && (!af.sub || l.subtype === af.sub)
+    && (!af.cond || l.condition === af.cond) && (!af.town || l.municipality === af.town) && (!af.vis || (af.vis === 'shown') === l.published))
+    .sort(af.sort === 'high' ? (a, b) => pv(b) - pv(a) : af.sort === 'low' ? (a, b) => pv(a) - pv(b) : af.sort === 'name' ? (a, b) => collator.compare(a.title, b.title) : recent)
+  const filtering = !!(q || af.avail || af.cat || af.sub || af.cond || af.town || af.vis || af.sort !== 'recent')
+  const asel = (k: keyof typeof AF0, label: string, choices: string[]) => <label key={k}>{label}<select value={af[k]} onChange={e => setAf({ ...af, [k]: e.target.value })}><option value="">Any</option>{choices.map(o => <option key={o}>{o}</option>)}</select></label>
   const hiddenCount = list.filter(l => !l.published).length
 
-  return (<div className="admin">
-    <header><a href="#/">← View site</a><h1>Listings manager</h1></header>
+  if (!connected) return (
+    <div className="wall"><form className="wall-card" onSubmit={e => { e.preventDefault(); connect() }}>
+      <span className="lock" aria-hidden><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="10" width="16" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg></span>
+      <h1>Listings manager</h1>
+      <p className="muted">Connect to GitHub to continue.</p>
+      <label>Owner<input value={cfg.owner} autoComplete="off" onChange={e => setCfg({ ...cfg, owner: e.target.value })} /></label>
+      <label>Repository<input value={cfg.repo} autoComplete="off" onChange={e => setCfg({ ...cfg, repo: e.target.value })} /></label>
+      <label>Branch<input value={cfg.branch} autoComplete="off" onChange={e => setCfg({ ...cfg, branch: e.target.value })} /></label>
+      <label>Access token<input type="password" value={token} autoComplete="off" onChange={e => setToken(e.target.value)} /></label>
+      {note && <p className="note bad" role="alert">{note.text}</p>}
+      <button className="btn" disabled={connecting}>{connecting ? 'Connecting…' : 'Connect'}</button>
+      <p className="muted small">Use a fine-grained token for this repository only, with Contents: read and write. It is kept in this browser tab and cleared when you close it.</p>
+      <a href="#/">← Back to the website</a>
+    </form></div>)
 
-    <details className="panel" open={!ready}><summary>GitHub connection {ready ? '· connected' : '· not connected'}</summary>
-      <div className="row">
-        <label>Owner<input value={cfg.owner} onChange={e => setCfg({ ...cfg, owner: e.target.value })} /></label>
-        <label>Repository<input value={cfg.repo} onChange={e => setCfg({ ...cfg, repo: e.target.value })} /></label>
-        <label>Branch<input value={cfg.branch} onChange={e => setCfg({ ...cfg, branch: e.target.value })} /></label>
-        <label>Access token<input type="password" value={token} onChange={e => setToken(e.target.value)} /></label>
-        <button className="btn" onClick={connect}>Connect</button>
-      </div>
-      <p className="muted">Fine-grained token for this repository only, with Contents: read and write. It stays in this browser tab.</p>
-    </details>
+  return (<div className="admin">
+    <header><a href="#/">← View site</a><h1>Listings manager</h1><span className="muted who">Connected to {cfg.owner}/{cfg.repo}</span><button className="disc" onClick={disconnect}>Disconnect</button></header>
 
     {note && <p className={note.ok ? 'note ok' : 'note bad'} role="status">{note.text}</p>}
 
     <div className="tabs">{(['listings', 'import', 'edit'] as const).map(t => <button key={t} className={tab === t ? 'on' : ''} onClick={() => { if (t === 'edit') setDraft(blank()); setTab(t) }}>{{ listings: `Listings (${list.length})`, import: 'Import', edit: 'Add listing' }[t]}</button>)}</div>
 
     {tab === 'listings' && <section>
-      <input className="search-in" placeholder="Search by name or location" value={q} onChange={e => setQ(e.target.value)} />
-      <p className="muted">{list.length - hiddenCount} shown on the site · {hiddenCount} hidden</p>
-      {rows.length === 0 ? <p className="empty">No listings yet. Import your spreadsheet or add one by hand.</p> :
+      <div className="afilters">
+        <div className="searchbar"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" /><path d="m20 20-4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+          <input type="search" aria-label="Search listings" placeholder="Search name, building, area, amenity, remarks…" value={q} onChange={e => setQ(e.target.value)} /></div>
+        {asel('avail', 'Availability', opts.avail)}{asel('cat', 'Category', opts.cat)}{asel('sub', 'Property subtype', opts.sub)}{asel('cond', 'Condition', opts.cond)}{asel('town', 'Municipality', opts.town)}
+        <label>Visibility<select value={af.vis} onChange={e => setAf({ ...af, vis: e.target.value })}><option value="">Any</option><option value="shown">On site</option><option value="hidden">Hidden</option></select></label>
+        <label>Sort by<select value={af.sort} onChange={e => setAf({ ...af, sort: e.target.value })}><option value="recent">Most Recent</option><option value="high">Price: High to Low</option><option value="low">Price: Low to High</option><option value="name">Name: A to Z</option></select></label>
+      </div>
+      <p className="muted resultsline">{filtering ? `${rows.length} of ${list.length} listings` : `${list.length} listings`} · {list.length - hiddenCount} on the site · {hiddenCount} hidden{filtering && <button className="linkish" onClick={() => { setQ(''); setAf(AF0) }}>Clear filters</button>}</p>
+      {rows.length === 0 ? <p className="empty">{list.length ? 'No listings match those filters.' : 'No listings yet. Import your spreadsheet or add one by hand.'}</p> :
         <div className="tablewrap"><table><thead><tr><th>Listing</th><th>Location</th><th>Price</th><th>On site</th><th></th></tr></thead><tbody>{rows.map(l => { const p = topPrice(l); return <tr key={l.id} className={l.published ? '' : 'dim'}>
           <td>{l.title}</td><td>{where(l)}</td><td>{p ? `${money(p.value)} · ${KIND_LABEL[p.kind]}` : '—'}</td>
           <td><input type="checkbox" checked={l.published} aria-label={`Show ${l.title} on the site`} onChange={e => setList(x => x.map(i => (i.id === l.id ? { ...i, published: e.target.checked } : i)))} />{!l.published && <small className="warn"> Hidden</small>}</td>
